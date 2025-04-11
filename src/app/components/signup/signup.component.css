@@ -1,4 +1,4 @@
-/* Style global du body pour centrer les formulaires */
+/* Centrer la page */
 body {
     height: 100vh;
     margin: 0;
@@ -6,19 +6,18 @@ body {
     justify-content: center;
     align-items: center;
     font-family: Arial, sans-serif;
-    background-color: #f8f9fa; /* Fond de la page */
+    background-color: #f8f9fa;
   }
   
-  /* Container du formulaire login */
+  /* Container partagé */
   .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f8f9fa;
   }
   
-  /* Le formulaire à l'intérieur du container */
+  /* Formulaire */
   .login-container form {
     background-color: white;
     padding: 2rem;
@@ -27,32 +26,28 @@ body {
     width: 300px;
   }
   
-  /* Titre du formulaire */
   .login-container form h2 {
     text-align: center;
     margin-bottom: 1rem;
   }
   
-  /* Marges pour les divs contenant les champs de formulaire */
   .login-container form div {
     margin-bottom: 1rem;
   }
   
-  /* Style des labels */
   .login-container form label {
     display: block;
     margin-bottom: 0.5rem;
   }
   
-  /* Style des champs de saisie */
-  .login-container form input {
+  .login-container form input,
+  .login-container form select {
     width: 100%;
     padding: 0.5rem;
     border-radius: 4px;
     border: 1px solid #ccc;
   }
   
-  /* Style du bouton de soumission */
   .login-container form button {
     width: 100%;
     padding: 0.75rem;
@@ -64,12 +59,10 @@ body {
     cursor: pointer;
   }
   
-  /* Changement de couleur au survol du bouton */
   .login-container form button:hover {
     background-color: #218838;
   }
   
-  /* Style pour les messages d'erreur */
   .login-container form p {
     text-align: center;
     font-size: 14px;

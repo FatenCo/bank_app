@@ -1,0 +1,34 @@
+<div class="login-container">
+    <form (ngSubmit)="register()">
+      <h2>Sign Up</h2>
+  
+      <!-- Username -->
+      <div>
+        <label>Username</label>
+        <input type="text" [(ngModel)]="user.username" name="username" required />
+      </div>
+  
+      <!-- Password -->
+      <div>
+        <label>Password</label>
+        <input type="password" [(ngModel)]="user.password" name="password" required />
+      </div>
+  
+      <!-- Role -->
+      <div>
+        <label>Role</label>
+        <select [(ngModel)]="user.role" name="role" required>
+          <option value="USER">User</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+      </div>
+  
+      <!-- Submit -->
+      <button type="submit">Register</button>
+  
+      <!-- Messages -->
+      <p *ngIf="errorMessage" style="color: red">{{ errorMessage }}</p>
+      <p *ngIf="successMessage" style="color: green">{{ successMessage }}</p>
+    </form>
+  </div>
+  
