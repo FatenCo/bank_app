@@ -1,0 +1,28 @@
+/* user-create.component.css */
+
+/* 1) Le host du composant devient un conteneur flex sur toute la hauteur */
+:host {
+    display: flex;
+    justify-content: center;  /* centre horizontalement */
+    align-items: center;      /* centre verticalement */
+    min-height: 100vh;        /* prend toute la hauteur de la fenêtre */
+    background-color: #f8f9fa;/* optionnel : fond clair pour contraste */
+  }
+  
+  /* 2) La .container ne fait pas la largeur totale, 
+        mais est limitée pour garder un beau rendu */
+  .container {
+    width: 100%;
+    max-width: 400px;         /* largeur max du formulaire */
+    padding: 2rem;            /* un peu d’air autour */
+    background: white;        /* fond blanc */
+    border-radius: 8px;       /* bords arrondis */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* ombre légère */
+  }
+  
+  /* 3) Tu peux ajuster l’espacement entre le titre et le form */
+  .container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  

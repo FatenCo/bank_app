@@ -1,0 +1,75 @@
+<div class="import-container">
+  <h2 class="text-center mb-4">Importation Référentiels</h2>
+
+  <!-- Onglets -->
+  <ul class="nav nav-tabs justify-content-center mb-3">
+    <li class="nav-item">
+      <a class="nav-link"
+         [class.active]="activeTab === 'manual'"
+         (click)="selectTab('manual')">
+        Manuel
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"
+         [class.active]="activeTab === 'file'"
+         (click)="selectTab('file')">
+        Fichier
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content w-100">
+    <!-- Manuel -->
+    <div *ngIf="activeTab === 'manual'">
+      <form [formGroup]="manualForm" (ngSubmit)="submitManual()">
+        <div class="row">
+          <div *ngFor="let ctrl of manualForm.controls | keyvalue"
+               class="col-md-4 mb-3">
+            <label [for]="ctrl.key" class="form-label">{{ ctrl.key }}</label>
+            <input [id]="ctrl.key"
+                   [formControlName]="ctrl.key"
+                   class="form-control" />
+          </div>
+        </div>
+        <div class="text-center">
+          <button class="btn btn-success"
+                  [disabled]="manualForm.invalid"
+                  type="submit">
+            Enregistrer
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Fichier -->
+    <div *ngIf="activeTab === 'file'" class="text-center">
+      <input type="file"
+             #fileInput
+             style="display:none"
+             (change)="onFileSelected($event)" />
+
+      <button class="btn btn-primary me-2"
+              (click)="fileInputRef.nativeElement.click()">
+        Sélectionner un fichier
+      </button>
+      <button class="btn btn-primary"
+              [disabled]="!selectedFile"
+              (click)="uploadFile()">
+        Importer
+      </button>
+
+      <div *ngIf="logs.length" class="logs mt-4 text-start">
+        <h5>Log d’import :</h5>
+        <ul>
+          <li *ngFor="let l of logs">{{ l }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage"
+       class="alert alert-danger mt-3 text-center">
+    {{ errorMessage }}
+  </div>
+</div>

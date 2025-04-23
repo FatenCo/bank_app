@@ -1,0 +1,24 @@
+<div class="container mt-4">
+    <h2>Ajouter un utilisateur</h2>
+    <form (ngSubmit)="save()" #f="ngForm">
+      <div class="mb-3">
+        <label for="username" class="form-label">Nom d'utilisateur</label>
+        <input id="username" name="username" [(ngModel)]="user.username" required class="form-control" />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Mot de passe</label>
+        <input id="password" type="password" name="password" [(ngModel)]="user.password" required class="form-control" />
+      </div>
+      <div class="mb-3">
+        <label for="role" class="form-label">Rôle</label>
+        <select id="role" name="role" [(ngModel)]="user.role" class="form-select">
+          <option value="USER">User</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" [disabled]="f.invalid">Enregistrer</button>
+      <a routerLink="/dashboard-admin" class="btn btn-secondary ms-2">Annuler</a>
+    </form>
+    <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+  </div>
+  

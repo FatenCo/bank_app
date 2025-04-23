@@ -1,0 +1,22 @@
+.dashboard-container {
+  padding: 20px;
+  max-width: 900px; /* ou la largeur que tu souhaites */
+  margin: 0 auto; /* centre horizontalement */
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap; /* au cas où ça déborde sur petits écrans */
+  justify-content: center; /* centre les cartes statistiques */
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 250px;
+}
+
+.table-card {
+  overflow-x: auto;
+  margin-top: 30px;
+}

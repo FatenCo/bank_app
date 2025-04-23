@@ -1,0 +1,16 @@
+<div class="container" *ngIf="user; else errorBlock">
+    <h2>Détails de l'utilisateur</h2>
+    <ul class="list-group">
+      <li class="list-group-item"><strong>ID :</strong> {{ user.id }}</li>
+      <li class="list-group-item"><strong>Nom d'utilisateur :</strong> {{ user.username }}</li>
+      <li class="list-group-item"><strong>Rôle :</strong> {{ user.role }}</li>
+    </ul>
+  
+    <button class="btn btn-primary mt-3" (click)="backToList()">Retour</button>
+  </div>
+  
+  <ng-template #errorBlock>
+    <div class="alert alert-danger mt-3">{{ error }}</div>
+    <button class="btn btn-secondary" (click)="backToList()">Retour</button>
+  </ng-template>
+  
