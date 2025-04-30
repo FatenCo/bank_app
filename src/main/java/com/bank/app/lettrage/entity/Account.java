@@ -5,11 +5,8 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "static_accounts")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Table(name = "accounts")
+@Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class Account {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,10 +28,10 @@ public class Account {
     @Column(name = "co_code")
     private String coCode;
 
-    // Nouveau : on stocke l’origine du batch d’import
-    @Column(name = "import_file_name")
+    // Nouveaux champs pour la saisie manuelle
+    @Column(name = "import_file_name", nullable = false)
     private String importFileName;
 
-    @Column(name = "import_date")
+    @Column(name = "import_date", nullable = false)
     private LocalDate importDate;
 }
