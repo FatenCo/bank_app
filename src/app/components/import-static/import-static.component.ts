@@ -1,7 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { StaticImportService } from 'src/app/services/static-import.service';
 import { Account } from 'src/app/models/account.model';
+import { ImportResult } from 'src/app/models/import-result.model';
 
 @Component({
   selector: 'app-import-static',
@@ -10,77 +11,113 @@ import { Account } from 'src/app/models/account.model';
 })
 export class ImportStaticComponent {
   manualForm: FormGroup;
-  selectedFile: File | null = null;
-  logs: string[] = [];
+  selectedFile: File|null = null;
+  importResult: ImportResult|null = null;
   errorMessage = '';
-  activeTab: 'manual' | 'file' = 'manual';
+  successMessage = '';
+  activeTab: 'manual'|'file' = 'manual';
+  submittedManual = false;
 
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
   constructor(
     private fb: FormBuilder,
-    private staticImportService: StaticImportService
+    private svc: StaticImportService
   ) {
-    this.manualForm = this.fb.group({
-      accountNo: ['', Validators.required],
-      shortName: [''],
-      mnemonic: [''],
-      accountOfficer: [''],
-      product: [''],
-      currency: [''],
-      customerId: [''],
-      maCode: [''],
-      accountType: [''],
-      coCode: ['']
-    });
+    // On applique `notZeroValidator` à **tous** les champs
+    const controlsConfig: any = {
+      accountNo:      ['', [Validators.required, this.notZeroValidator]],
+      shortName:      ['', this.notZeroValidator],
+      mnemonic:       ['', this.notZeroValidator],
+      accountOfficer: ['', this.notZeroValidator],
+      product:        ['', this.notZeroValidator],
+      currency:       ['', [Validators.required, this.notZeroValidator]],
+      customerId:     ['', [Validators.required, this.notZeroValidator]],
+      maCode:         ['', this.notZeroValidator],
+      accountType:    ['', this.notZeroValidator],
+      coCode:         ['', this.notZeroValidator],
+      importFileName: ['', [Validators.required, this.notZeroValidator]],
+      importDate:     ['', Validators.required]
+    };
+    this.manualForm = this.fb.group(controlsConfig);
   }
 
-  /** Change d’onglet */
-  selectTab(tab: 'manual' | 'file') {
+  /** Sélection onglet */
+  selectTab(tab: 'manual'|'file') {
     this.activeTab = tab;
-    this.errorMessage = '';
-    this.logs = [];
+    this.clearMessages();
+    this.submittedManual = false;
     this.selectedFile = null;
-    if (this.fileInputRef) {
-      this.fileInputRef.nativeElement.value = '';
-    }
+    // avoid optional chaining pro-parser error
+    if (this.fileInputRef) this.fileInputRef.nativeElement.value = '';
   }
 
-  /** Quand on sélectionne un fichier */
-  onFileSelected(evt: Event) {
-    this.errorMessage = '';
-    this.logs = [];
-    const input = evt.target as HTMLInputElement;
-    this.selectedFile = (input.files && input.files.length > 0)
-      ? input.files[0]
+  /** Validator : interdit strictement la chaîne "0" */
+  notZeroValidator(control: AbstractControl) {
+    return control.value === '0'
+      ? { zeroNotAllowed: true }
       : null;
   }
 
-  /** Enregistrement manuel */
+  /** Soumission du manuel */
   submitManual() {
-    if (this.manualForm.invalid) return;
-    this.errorMessage = '';
-    this.staticImportService.createManual(this.manualForm.value).subscribe({
-      next: () => {
-        alert('Enregistrement manuel réussi');
-        this.manualForm.reset();
+    this.submittedManual = true;
+    if (this.manualForm.invalid) {
+      this.errorMessage = '❌ Veuillez corriger les erreurs avant de soumettre.';
+      return;
+    }
+    this.clearMessages();
+    const acct: Account = this.manualForm.value;
+    this.svc.importManual(acct).subscribe({
+      next: res => {
+        this.importResult = res;
+        if (res.failureCount > 0) {
+          this.errorMessage = `⚠️ ${res.failureCount} erreur(s) détectée(s)`;
+        } else {
+          this.successMessage = '✅ Import manuel réussi !';
+        }
       },
-      error: (err: any) => {
-        this.errorMessage = err.error?.[0] || err.message || 'Erreur lors de l’enregistrement';
+      error: err => {
+        this.errorMessage = err.error?.logs?.[0]?.message || err.message;
       }
     });
   }
 
-  /** Import par fichier */
+  /** Sélection fichier */
+  onFileSelected(evt: Event) {
+    this.clearMessages();
+    const input = evt.target as HTMLInputElement;
+    this.selectedFile = input.files?.[0] ?? null;
+  }
+
+  /** Upload fichier */
   uploadFile() {
     if (!this.selectedFile) return;
-    this.errorMessage = '';
-    this.logs = [];
-    this.staticImportService.importFile(this.selectedFile).subscribe({
-      next: (res: string[]) => this.logs = res,
-      error: (err: any) => {
-        this.errorMessage = err.error?.[0] || err.message || 'Erreur lors de l’import';
+    this.clearMessages();
+    this.svc.uploadFile(this.selectedFile).subscribe({
+      next: res => {
+        this.importResult = res;
+        if (res.failureCount > 0) {
+          this.errorMessage = `⚠️ ${res.failureCount} échec(s) sur ${res.total}`;
+        } else {
+          this.successMessage = `✅ ${res.total} lignes importées`;
+        }
+      },
+      error: err => {
+        this.errorMessage = err.error?.logs?.[0]?.message || err.message;
       }
     });
+  }
+
+  /** Indique si on doit afficher le tableau de logs */
+  hasLogs(): boolean {
+    return !!(this.importResult && this.importResult.logs.length > 0);
+  }
+
+  /** Efface messages & résultat */
+  private clearMessages() {
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.importResult = null;
   }
 }

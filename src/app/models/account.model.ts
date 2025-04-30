@@ -1,13 +1,15 @@
 export interface Account {
-    id?: number;
-    accountNo: string;
-    shortName?: string;
-    mnemonic?: string;
-    accountOfficer?: string;
-    product?: string;
-    currency?: string;
-    customerId?: string;
-    maCode?: string;
-    accountType?: string;
-    coCode?: string;
-  }
+  id?: number;
+  accountNo: string;
+  shortName?: string;
+  mnemonic?: string;
+  accountOfficer?: string;
+  product?: string;
+  currency?: string;
+  customerId?: string;
+  maCode?: string;
+  accountType?: string;
+  coCode?: string;
+  importFileName: string;
+  importDate: string;  // format YYYY-MM-DD
+}

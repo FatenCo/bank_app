@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Account } from '../models/account.model';
+import { ImportResult } from '../models/import-result.model';
 
 @Injectable({ providedIn: 'root' })
 export class StaticImportService {
@@ -9,31 +10,26 @@ export class StaticImportService {
 
   constructor(private http: HttpClient) {}
 
-  /** Retourne les headers avec le Bearer token */
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token') ?? '';
+  private authHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token') || '';
     return new HttpHeaders({ Authorization: `Bearer ${token}` });
   }
 
-  /** Enregistrement manuel (POST JSON) */
-  createManual(account: Account): Observable<Account> {
-    return this.http.post<Account>(
+  importManual(acct: Account): Observable<ImportResult> {
+    return this.http.post<ImportResult>(
       this.apiUrl,
-      account,
-      { headers: this.getAuthHeaders() }
+      acct,
+      { headers: this.authHeaders() }
     );
   }
 
-  /** Import depuis un fichier Excel/CSV (multipart/form-data) */
-  importFile(file: File): Observable<string[]> {
-    const formData = new FormData();
-    formData.append('file', file, file.name);
-
-    // NE PAS forcer Content-Type : Angular s’occupe de boundary
-    return this.http.post<string[]>(
+  uploadFile(file: File): Observable<ImportResult> {
+    const fd = new FormData();
+    fd.append('file', file, file.name);
+    return this.http.post<ImportResult>(
       `${this.apiUrl}/upload`,
-      formData,
-      { headers: this.getAuthHeaders() }
+      fd,
+      { headers: this.authHeaders() }
     );
   }
 }
