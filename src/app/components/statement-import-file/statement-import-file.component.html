@@ -1,0 +1,19 @@
+<div class="upload-container">
+  <h2>Importation par Fichier</h2>
+
+  <div class="file-input">
+    <input type="file" (change)="onFileSelected($event)" class="form-control-file" />
+    <button class="btn btn-success" (click)="upload()" [disabled]="!selectedFile">
+      <i class="bi bi-cloud-upload"></i> Uploader
+    </button>
+  </div>
+
+  <div *ngIf="progress" class="progress mt-2">
+    <div class="progress-bar" [style.width.%]="progress">{{ progress }}%</div>
+  </div>
+
+  <div *ngIf="job" class="result-card mt-3">
+    <h3>Statut du Job</h3>
+    <pre>{{ job | json }}</pre>
+  </div>
+</div>

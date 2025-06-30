@@ -1,0 +1,58 @@
+<div class="content-wrapper">
+  <div class="list-header">
+    <h2>Liste des Comptes</h2>
+    <div class="search-group">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="applyFilter()"
+        placeholder="Rechercher par compte, transaction ou entité"
+        class="form-control search-input"
+      />
+      <i class="bi bi-search search-icon"></i>
+    </div>
+    <button class="btn btn-primary" (click)="router.navigate(['/entries/edit','new'])">
+      <i class="bi bi-plus-lg"></i> Nouveau
+    </button>
+  </div>
+
+  <table class="table table-hover modern-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Transaction</th>
+        <th>Montant</th>
+        <th>Entité</th>
+        <th>Compte</th>
+        <th>Total</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of filtered">
+        <td>{{ e.dateOperation }}</td>
+        <td>{{ e.transactionId }}</td>
+        <td>{{ e.amount | number:'1.2-2' }}</td>
+        <td>{{ e.entity }}</td>
+        <td>{{ e.accountNumber }}</td>
+        <td>{{ e.total }}</td>
+        <td class="text-center">
+          <div class="btn-group" role="group">
+            <button class="btn btn-outline-info btn-sm" (click)="router.navigate(['/entries/view', e.id])" title="Consulter">
+              <i class="bi bi-eye"></i>
+            </button>
+            <button class="btn btn-outline-primary btn-sm" (click)="edit(e.id)" title="Modifier">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-outline-danger btn-sm" (click)="delete(e.id)" title="Supprimer">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="filtered.length === 0">
+        <td colspan="7" class="text-center text-muted">Aucun compte trouvé</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

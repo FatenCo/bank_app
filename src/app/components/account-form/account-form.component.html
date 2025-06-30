@@ -1,0 +1,16 @@
+<!-- src/app/components/account-form/account-form.component.html -->
+<div class="content-wrapper">
+  <h2>Modifier le Compte</h2>
+  <form [formGroup]="form" (ngSubmit)="save()" class="form-container">
+    <div *ngFor="let field of ['dateOperation','transactionId','amount','entity','remarks','accountNumber','total']" class="form-group">
+      <label>{{ field | titlecase }}</label>
+      <input
+        [type]="field === 'amount' || field === 'total' ? 'number' : 'text'"
+        [formControlName]="field"
+        class="form-control"
+      />
+    </div>
+    <button type="submit" class="btn btn-success" [disabled]="form.invalid">Enregistrer</button>
+    <button type="button" class="btn btn-secondary" (click)="cancel()">Annuler</button>
+  </form>
+</div>

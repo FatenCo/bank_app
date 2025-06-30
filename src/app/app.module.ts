@@ -1,3 +1,5 @@
+// src/app/app.module.ts
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
@@ -16,7 +18,27 @@ import { DashboardAdminComponent } from './components/dashboard-admin/dashboard-
 import { UserDetailComponent } from './components/user-detail/user-detail.component';
 import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { UserCreateComponent } from './components/user-create/user-create.component';
-import { ImportStaticComponent } from './components/import-static/import-static.component';
+import { ManualImportComponent } from './components/manual-import/manual-import.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { ImportStatusComponent } from './components/import-status/import-status.component';
+import { AccountListComponent } from './components/account-list/account-list.component';
+import { AccountFormComponent } from './components/account-form/account-form.component';
+import { AccountDetailComponent } from './components/account-detail/account-detail.component';
+import { StatementListComponent } from './components/statement-list/statement-list.component';
+import { StatementDetailComponent } from './components/statement-detail/statement-detail.component';
+import { StatementFormComponent } from './components/statement-form/statement-form.component';
+import { StatementImportManualComponent } from './components/statement-import-manual/statement-import-manual.component';
+import { StatementImportFileComponent } from './components/statement-import-file/statement-import-file.component';
+import { StatementStatusComponent } from './components/statement-status/statement-status.component';
+import { DirectoryConfigComponent } from './components/directory-config/directory-config.component';
+import { ProcessListComponent } from './components/process-list/process-list.component';
+import { ProcessFormComponent } from './components/process-form/process-form.component';
+import { ProcessDetailComponent } from './components/process-detail/process-detail.component';
+import { ExecutionListComponent } from './components/execution-list/execution-list.component';
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -32,14 +54,30 @@ import { ImportStaticComponent } from './components/import-static/import-static.
     UserDetailComponent,
     UserEditComponent,
     UserCreateComponent,
-    ImportStaticComponent
-  ],
+    ManualImportComponent,
+    FileUploadComponent,
+    ImportStatusComponent,
+    AccountListComponent,
+    AccountFormComponent,
+    AccountDetailComponent,
+    StatementListComponent,
+    StatementDetailComponent,
+    StatementFormComponent,
+    StatementImportManualComponent,
+    StatementImportFileComponent,
+    StatementStatusComponent,
+    DirectoryConfigComponent,
+    ProcessListComponent,
+    ProcessFormComponent,
+    ProcessDetailComponent,
+    ExecutionListComponent
+        ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule ,
-    ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

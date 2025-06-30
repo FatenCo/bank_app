@@ -1,0 +1,47 @@
+<div class="content-wrapper">
+  <form [formGroup]="manualForm" (ngSubmit)="submit()" class="form-container">
+    <h2>Importation Manuelle</h2>
+    <div formArrayName="entries">
+      <div *ngFor="let entry of entries.controls; let i = index" [formGroupName]="i" class="entry-block">
+        <h3>Entrée #{{ i + 1 }}</h3>
+        <div class="form-group">
+          <label>Date Opération</label>
+          <input type="text" formControlName="dateOperation" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Transaction ID</label>
+          <input type="text" formControlName="transactionId" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Montant</label>
+          <input type="number" formControlName="amount" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Entité</label>
+          <input type="text" formControlName="entity" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Observations</label>
+          <input type="text" formControlName="remarks" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Numéro de Compte</label>
+          <input type="text" formControlName="accountNumber" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Total</label>
+          <input type="number" formControlName="total" class="form-control" />
+        </div>
+        <button type="button" class="btn btn-secondary remove-btn" (click)="removeEntry(i)">Supprimer</button>
+        <hr />
+      </div>
+    </div>
+    <button type="button" class="btn btn-link" (click)="addEntry()">+ Ajouter une entrée</button>
+    <button type="submit" class="btn btn-primary" [disabled]="manualForm.invalid">Envoyer</button>
+  </form>
+
+  <div *ngIf="result" class="result-card">
+    <h3>Statut du job</h3>
+    <pre>{{ result | json }}</pre>
+  </div>
+</div>

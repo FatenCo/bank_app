@@ -1,0 +1,36 @@
+<div class="form-container">
+  <h2>{{ id === 'new' ? 'Nouveau' : 'Modifier' }} Statement</h2>
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="grid">
+      <ng-container *ngFor="let field of [
+        'contract','category','consolKey','currency',
+        'customerNo','department','accountNumber',
+        'amtFcy','amtLcy','lclBalConv','acctDate',
+        'locContractType','deptLevel','residence'
+      ]">
+        <div class="form-group">
+          <label>{{ field | titlecase }}</label>
+          <input
+            [type]="field.includes('amt')||field==='deptLevel'?'number':'text'"
+            [formControlName]="field"
+            class="form-control"
+          />
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="buttons">
+      <button type="submit" class="btn-save" [disabled]="form.invalid">
+        Enregistrer
+      </button>
+      <button type="button" class="btn-cancel" (click)="cancel()">
+        Annuler
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="job" class="result-card">
+    <h3>Job Créé</h3>
+    <pre>{{ job | json }}</pre>
+  </div>
+</div>

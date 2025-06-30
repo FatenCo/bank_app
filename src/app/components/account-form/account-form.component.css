@@ -1,0 +1,15 @@
+/* src/app/components/account-form/account-form.component.css */
+.content-wrapper {
+  margin-left: 250px;
+  padding: 1rem;
+}
+.form-container {
+  max-width: 600px;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 8px;
+}
+.form-group { margin-bottom: 0.75rem; }
+.form-control { width: 100%; padding: 0.5rem; }
+.btn { margin-right: 0.5rem; }

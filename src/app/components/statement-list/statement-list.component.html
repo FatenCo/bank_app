@@ -1,0 +1,70 @@
+<div class="content-wrapper">
+  <div class="list-header">
+    <h2>Liste des Statements</h2>
+
+    <div class="search-group">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="applyFilter()"
+        placeholder="Rechercher contract, catégorie ou compte"
+        class="form-control search-input"
+      />
+      <i class="bi bi-search search-icon"></i>
+    </div>
+
+    <button class="btn btn-primary" (click)="router.navigate(['stmts/new'])">
+      <i class="bi bi-plus-lg"></i> Nouveau
+    </button>
+  </div>
+
+  <table class="table table-hover modern-table">
+    <thead>
+      <tr>
+        <th>Contract</th>
+        <th>Category</th>
+        <th>Devise</th>
+        <th>Compte</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of filtered">
+        <td>{{ e.contract }}</td>
+        <td>{{ e.category }}</td>
+        <td>{{ e.currency }}</td>
+        <td>{{ e.accountNumber }}</td>
+        <td class="text-center">
+          <div class="btn-group" role="group">
+            <button
+              class="btn btn-outline-info btn-sm"
+              (click)="view(e.id)"
+              title="Consulter"
+            >
+              <i class="bi bi-eye"></i>
+            </button>
+            <button
+              class="btn btn-outline-primary btn-sm"
+              (click)="edit(e.id)"
+              title="Modifier"
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              (click)="delete(e.id)"
+              title="Supprimer"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="filtered.length === 0">
+        <td colspan="5" class="text-center text-muted">
+          Aucun statement trouvé
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

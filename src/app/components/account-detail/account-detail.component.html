@@ -1,0 +1,14 @@
+<div class="content-wrapper" *ngIf="entry">
+  <h2>Détails du Compte</h2>
+  <ul class="detail-list">
+    <li><strong>ID :</strong> {{ entry.id }}</li>
+    <li><strong>Date Opération :</strong> {{ entry.dateOperation }}</li>
+    <li><strong>Transaction :</strong> {{ entry.transactionId }}</li>
+    <li><strong>Montant :</strong> {{ entry.amount }}</li>
+    <li><strong>Entité :</strong> {{ entry.entity }}</li>
+    <li><strong>Observations :</strong> {{ entry.remarks }}</li>
+    <li><strong>Numéro de Compte :</strong> {{ entry.accountNumber }}</li>
+    <li><strong>Total :</strong> {{ entry.total }}</li>
+  </ul>
+  <button class="btn btn-secondary" (click)="back()">Retour à la liste</button>
+</div>

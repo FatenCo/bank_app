@@ -1,0 +1,25 @@
+<div class="execution-wrapper">
+  <h3>Historique des Exécutions</h3>
+
+  <table class="table modern-table">
+    <thead>
+      <tr>
+        <th>Début</th>
+        <th>Fin</th>
+        <th>Statut</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of executions">
+        <td>{{ e.startTime | date:'short' }}</td>
+        <td>{{ e.endTime   | date:'short' }}</td>
+        <td>{{ e.status }}</td>
+        <td>{{ e.message }}</td>
+      </tr>
+      <tr *ngIf="!loading && executions.length === 0">
+        <td colspan="4" class="text-center text-muted">Aucune exécution</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

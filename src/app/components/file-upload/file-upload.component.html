@@ -1,0 +1,13 @@
+<div class="content-wrapper">
+  <div class="upload-container">
+    <h2>Importation par Fichier</h2>
+    <input type="file" (change)="onFileSelected($event)" />
+    <button class="btn btn-success" (click)="upload()" [disabled]="!selectedFile">Uploader</button>
+    <div *ngIf="progress">Progression: {{ progress }}%</div>
+  </div>
+
+  <div *ngIf="job" class="result-card">
+    <h3>Statut du job</h3>
+    <pre>{{ job | json }}</pre>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="detail-container" *ngIf="entry">
+  <h2>Détail Statement</h2>
+  <dl>
+    <dt>Contract</dt>           <dd>{{ entry.contract }}</dd>
+    <dt>Category</dt>           <dd>{{ entry.category }}</dd>
+    <dt>Consol Key</dt>         <dd>{{ entry.consolKey }}</dd>
+    <dt>Currency</dt>           <dd>{{ entry.currency }}</dd>
+    <dt>Customer No</dt>        <dd>{{ entry.customerNo }}</dd>
+    <dt>Department</dt>         <dd>{{ entry.department }}</dd>
+    <dt>Account Number</dt>     <dd>{{ entry.accountNumber }}</dd>
+    <dt>Amt FCY</dt>            <dd>{{ entry.amtFcy }}</dd>
+    <dt>Amt LCY</dt>            <dd>{{ entry.amtLcy }}</dd>
+    <dt>LCL Bal Conv</dt>       <dd>{{ entry.lclBalConv }}</dd>
+    <dt>Acct Date</dt>          <dd>{{ entry.acctDate }}</dd>
+    <dt>Loc Contract Type</dt>  <dd>{{ entry.locContractType }}</dd>
+    <dt>Dept Level</dt>         <dd>{{ entry.deptLevel }}</dd>
+    <dt>Residence</dt>          <dd>{{ entry.residence }}</dd>
+  </dl>
+  <button class="btn-back" (click)="back()">
+    <i class="bi bi-arrow-left"></i> Retour
+  </button>
+</div>

@@ -1,0 +1,23 @@
+<div class="content-wrapper">
+  <button class="btn btn-secondary mb-3" (click)="back()">← Retour</button>
+
+  <h2>Détail du Process</h2>
+  <dl class="row mt-3">
+    <dt class="col-sm-3">Nom</dt>
+    <dd class="col-sm-9">{{ pd?.name }}</dd>
+
+    <dt class="col-sm-3">Description</dt>
+    <dd class="col-sm-9">{{ pd?.description }}</dd>
+
+    <dt class="col-sm-3">Type</dt>
+    <dd class="col-sm-9">{{ pd?.type }}</dd>
+
+    <dt class="col-sm-3">Mode</dt>
+    <dd class="col-sm-9">{{ pd?.mode }}</dd>
+
+    <dt class="col-sm-3">Statut</dt>
+    <dd class="col-sm-9">{{ pd?.enabled ? 'Actif' : 'Inactif' }}</dd>
+  </dl>
+
+  <app-execution-list [definitionId]="definitionId"></app-execution-list>
+</div>

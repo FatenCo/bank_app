@@ -1,0 +1,47 @@
+.content-wrapper {
+  margin-left: 250px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-container {
+  max-width: 500px;
+  width: 100%;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn {
+  margin-top: 0.5rem;
+}
+
+.result-card {
+  max-width: 600px;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.job-block {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #eaeaea;
+  border-radius: 4px;
+}

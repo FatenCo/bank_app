@@ -37,10 +37,11 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="./index.html" class="nav-link active">
+              <a routerLink="/home" class="nav-link active">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Dashboard</p>
               </a>
+        
             </li>
           </ul>
         </li>
@@ -195,30 +196,28 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <li class="nav-item">
-                    <a routerLink="/import-account" class="nav-link">
+                    <a routerLink="/manual" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>ADD ACCOUNT</p>
+                      <p>ADD ACCOUNT MANUAL</p>
                     </a>
                   </li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Category
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
                   <li class="nav-item">
-                    <a routerLink="/import-account" class="nav-link">
+                    <a routerLink="/upload" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>ADD Category</p>
+                      <p>ADD ACCOUNT UPLOAD</p>
                     </a>
+                  </li>
+                   <li class="nav-item">
+                    <a routerLink="/status" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>ACCOUNT STATUS</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a routerLink="/accounts" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>ALL ACCOUNT</p>
+                    </a>                    
                   </li>
               </ul>
             </li>
@@ -235,89 +234,47 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <li class="nav-item">
-                    <a routerLink="/import-account" class="nav-link">
+                    <a routerLink="stmts/import/manual" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>ADD STMT</p>
+                      <p>ADD STMT MANUAL</p>
                     </a>
+                  </li>
+                  <li class="nav-item">
+                    <a routerLink="stmts/import/file" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>ADD STMT UPLOAD</p>
+                    </a>
+                  </li>
+                   <li class="nav-item">
+                    <a routerLink="/status" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>STMT STATUS</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a routerLink="/stmts" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>ALL STMT</p>
+                    </a>                    
                   </li>
               </ul>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+         <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>
-                  FT
+                  CONFIGURATION
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <li class="nav-item">
-                    <a routerLink="/import-account" class="nav-link">
+                    <a routerLink="/config/directories" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>ADD FT</p>
-                    </a>
-                  </li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  TT
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <li class="nav-item">
-                    <a routerLink="/import-account" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>ADD TT</p>
-                    </a>
-                  </li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  CR
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <li class="nav-item">
-                    <a routerLink="/import-account" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>ADD CR</p>
-                    </a>
-                  </li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  DAO
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <li class="nav-item">
-                    <a routerLink="/import-account" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>ADD DAO</p>
+                      <p>DATA CONFIG</p>
                     </a>
                   </li>
               </ul>
@@ -334,20 +291,54 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a routerLink="/dashboard-admin" class="nav-link">
+              <a routerLink="/processes/new" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>lancer process</p>
+                <p>process definition</p>
               </a>
             </li>
             <li class="nav-item">
-              <a routerLink="/users-create" class="nav-link">
+              <a routerLink="/processes" class="nav-link">
                 <i class="nav-icon fas fa-user-plus"></i>
-                <p>Consulter process</p>
+                <p>all process</p>
+              </a>
+            </li>
+              <li class="nav-item">
+              <a routerLink="/executions" class="nav-link">
+                <i class="nav-icon fas fa-user-plus"></i>
+                <p>process execution</p>
               </a>
             </li>
           </ul>
         </li>
-
+  <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon far fa-plus-square"></i>
+            <p>
+              Réconciliation 
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a routerLink="/rec-auto/list" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p> Réconciliation </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a routerLink="/rec/manual/:id" class="nav-link">
+                <i class="nav-icon fas fa-user-plus"></i>
+                <p>Réconciliation manuelle/p>
+              </a>
+            </li>
+              <li class="nav-item">
+              <a routerLink="/rec/unrec/:id" class="nav-link">
+                <i class="nav-icon fas fa-user-plus"></i>
+                <p>Annulation manuelle de réconciliation </p>
+              </a>
+            </li>
+          </ul>
+        </li>
 
         <li class="nav-header">MISCELLANEOUS</li>
         <li class="nav-item">

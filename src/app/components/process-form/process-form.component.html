@@ -1,0 +1,54 @@
+<div class="content-wrapper">
+  <div class="form-container">
+    <h2>{{ editing ? 'Modifier' : 'Créer' }} un Process</h2>
+    <form [formGroup]="form" (ngSubmit)="save()">
+
+      <div class="form-group">
+        <label>Nom</label>
+        <input class="form-control" formControlName="name" />
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" formControlName="description"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Type</label>
+          <select class="form-select" formControlName="type">
+            <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Mode</label>
+          <select class="form-select" formControlName="mode">
+            <option *ngFor="let m of modes" [value]="m">{{ m }}</option>
+          </select>
+        </div>
+        <div class="form-group align-end">
+          <label class="form-check-label me-2">Activé</label>
+          <input type="checkbox" class="form-check-input" formControlName="enabled" />
+        </div>
+      </div>
+
+      <!-- Date + heure si Scheduled -->
+      <div *ngIf="form.get('mode')!.value==='SCHEDULED'" class="form-group mt-3">
+        <label>Date & heure de planification</label>
+        <input
+          type="datetime-local"
+          class="form-control"
+          formControlName="scheduledAt"
+        />
+      </div>
+
+      <div class="mt-4">
+        <button type="button" class="btn btn-secondary me-2" (click)="back()">Annuler</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+          {{ editing ? 'Mettre à jour' : 'Créer' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

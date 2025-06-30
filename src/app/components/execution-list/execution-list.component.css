@@ -1,0 +1,19 @@
+.execution-wrapper {
+  margin-top: 2rem;
+}
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0 0.5rem;
+}
+.modern-table th {
+  background: #e9ecef;
+  font-weight: 600;
+}
+.modern-table td {
+  background: #fff;
+  vertical-align: middle;
+}
+.modern-table tr:hover td {
+  background: #e2f0ff;
+}

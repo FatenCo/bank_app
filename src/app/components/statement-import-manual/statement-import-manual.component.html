@@ -1,0 +1,95 @@
+<div class="import-container">
+  <h2>Importation Manuelle</h2>
+
+  <div *ngFor="let e of entries; let i = index" class="entry-block">
+    <h4>Entrée #{{ i + 1 }}</h4>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Contract</label>
+        <input [(ngModel)]="e.contract" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <input [(ngModel)]="e.category" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Consol Key</label>
+        <input [(ngModel)]="e.consolKey" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Currency</label>
+        <input [(ngModel)]="e.currency" class="form-control" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Customer No</label>
+        <input [(ngModel)]="e.customerNo" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Department</label>
+        <input [(ngModel)]="e.department" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Account Number</label>
+        <input [(ngModel)]="e.accountNumber" class="form-control" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Amt FCY</label>
+        <input type="number" [(ngModel)]="e.amtFcy" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Amt LCY</label>
+        <input type="number" [(ngModel)]="e.amtLcy" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>LCL Bal Conv</label>
+        <input type="number" [(ngModel)]="e.lclBalConv" class="form-control" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Acct Date (YYYY-MM)</label>
+        <input [(ngModel)]="e.acctDate" placeholder="2025-06" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Loc Contract Type</label>
+        <input [(ngModel)]="e.locContractType" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Dept Level</label>
+        <input type="number" [(ngModel)]="e.deptLevel" class="form-control" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Residence</label>
+      <input [(ngModel)]="e.residence" class="form-control" />
+    </div>
+
+    <button class="btn btn-outline-danger btn-sm" (click)="removeEntry(i)">
+      <i class="bi bi-trash"></i> Supprimer
+    </button>
+    <hr />
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-link" (click)="addEntry()">
+      <i class="bi bi-plus-lg"></i> Ajouter une entrée
+    </button>
+    <button class="btn btn-primary" (click)="submit()" [disabled]="!entries.length">
+      <i class="bi bi-upload"></i> Importer
+    </button>
+  </div>
+
+  <div *ngIf="job" class="result-card">
+    <h3>Statut du Job</h3>
+    <pre>{{ job | json }}</pre>
+  </div>
+</div>

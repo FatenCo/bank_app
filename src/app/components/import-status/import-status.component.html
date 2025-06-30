@@ -1,0 +1,42 @@
+<div class="content-wrapper">
+  <div class="search-container">
+    <h2>Recherche de Jobs</h2>
+
+    <div class="form-group">
+      <label>Filtrer par :</label>
+      <select [(ngModel)]="filterType" class="form-control">
+        <option value="id">ID</option>
+        <option value="file">Nom de fichier</option>
+        <option value="date">Date (YYYY-MM-DD)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label *ngIf="filterType === 'id'">Job ID :</label>
+      <label *ngIf="filterType === 'file'">Nom du fichier :</label>
+      <label *ngIf="filterType === 'date'">Date :</label>
+      <input
+        [type]="filterType === 'date' ? 'date' : 'text'"
+        [(ngModel)]="filterValue"
+        class="form-control"
+        [placeholder]="
+          filterType === 'id' ? 'Entrez l’ID du job' :
+          filterType === 'file' ? 'Entrez une partie du nom' :
+          'YYYY-MM-DD'
+        "
+      />
+    </div>
+
+    <button class="btn btn-primary" (click)="search()" [disabled]="!filterValue">
+      Rechercher
+    </button>
+  </div>
+
+  <!-- Affichage universel : on boucle sur results et on montre le JSON complet -->
+  <div *ngIf="results.length" class="result-card">
+    <h3>Résultats ({{ results.length }})</h3>
+    <div *ngFor="let job of results" class="job-block">
+      <pre>{{ job | json }}</pre>
+    </div>
+  </div>
+</div>
