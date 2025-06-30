@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 public class DirectoryConfigProperties {
     private String accountsDir;
     private String stmtsDir;
+    private String archiveAccountsDir;
+    private String archiveStmtsDir;
 
     public String getAccountsDir() {
         return accountsDir;
@@ -21,5 +23,17 @@ public class DirectoryConfigProperties {
     }
     public void setStmtsDir(String stmtsDir) {
         this.stmtsDir = stmtsDir;
+    }
+    public String getArchiveAccountsDir() {
+        return archiveAccountsDir;
+    }
+    public void setArchiveAccountsDir(String archiveAccountsDir) {
+        this.archiveAccountsDir = archiveAccountsDir;
+    }
+    public String getArchiveStmtsDir() {
+        return archiveStmtsDir;
+    }
+    public void setArchiveStmtsDir(String archiveStmtsDir) {
+        this.archiveStmtsDir = archiveStmtsDir;
     }
 }

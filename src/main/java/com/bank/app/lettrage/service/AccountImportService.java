@@ -5,7 +5,6 @@ import com.bank.app.lettrage.entity.AccountEntry;
 import com.bank.app.lettrage.entity.ImportJob;
 import com.bank.app.lettrage.repository.AccountRepository;
 import com.bank.app.lettrage.repository.ImportJobRepository;
-import jakarta.annotation.PostConstruct;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -23,10 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -57,7 +53,6 @@ public class AccountImportService {
     // IMPORTATION DES DONNÉES
     // ======================
 
-    /** Import manuel d’une liste d’entrées */
     public ImportJob importManual(List<AccountEntry> entries) {
         ImportJob job = jobRepo.createNew("manual-import");
         entries.forEach(e -> e.setImportJob(job));
@@ -66,12 +61,10 @@ public class AccountImportService {
         return jobRepo.save(job);
     }
 
-    /** Import asynchrone depuis un fichier (CSV | Excel) */
     public CompletableFuture<ImportJob> importByFile(MultipartFile file) {
         String filename = Optional.ofNullable(file.getOriginalFilename())
                 .orElse(UUID.randomUUID().toString());
 
-        // anti‑doublon
         if (jobRepo.existsBySourceAndStatus(filename, "COMPLETED")) {
             log.warn("Fichier déjà importé : {}", filename);
             ImportJob dup = jobRepo.createNew(filename);
@@ -81,13 +74,9 @@ public class AccountImportService {
 
         ImportJob job = jobRepo.createNew(filename);
         try (InputStream in = file.getInputStream()) {
-            List<AccountEntry> entries;
-            String lower = filename.toLowerCase();
-            if (lower.endsWith(".xls") || lower.endsWith(".xlsx")) {
-                entries = parseExcel(in);
-            } else {
-                entries = parseCsv(in);
-            }
+            List<AccountEntry> entries = filename.toLowerCase().endsWith("xls") || filename.toLowerCase().endsWith("xlsx")
+                    ? parseExcel(in)
+                    : parseCsv(in);
 
             entries.forEach(e -> e.setImportJob(job));
             accountRepo.saveAll(entries);
@@ -102,24 +91,50 @@ public class AccountImportService {
         return CompletableFuture.completedFuture(jobRepo.save(job));
     }
 
-    /** Scanner périodiquement le dossier et importer tout nouveau fichier CSV/XLS(X) */
+    /**
+     * Scanne plusieurs dossiers, importe puis archive les fichiers.
+     * Dossiers source et archive configurés dans DirectoryConfigProperties.
+     */
     @Async
     public void importByDirectory() {
-        Path dir = Paths.get(cfg.getAccountsDir());
-        log.info("Scanning accounts dir: {}", dir);
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir)) {
-            for (Path p : ds) {
-                File f = p.toFile();
-                if (!f.isFile()) continue;
-                try (FileInputStream fis = new FileInputStream(f)) {
-                    MultipartFile mf = new MockMultipartFile(
-                            f.getName(), f.getName(),
-                            "application/octet-stream", fis);
-                    importByFile(mf).join();
+        // Cartographie source -> archive
+        Map<Path, Path> dirs = Map.of(
+                Paths.get(cfg.getAccountsDir()), Paths.get(cfg.getArchiveAccountsDir()),
+                Paths.get(cfg.getStmtsDir()),    Paths.get(cfg.getArchiveStmtsDir())
+        );
+
+        for (var entry : dirs.entrySet()) {
+            Path sourceDir = entry.getKey();
+            Path archiveDir = entry.getValue();
+            log.info("Scanning directory: {}", sourceDir);
+            try (DirectoryStream<Path> ds = Files.newDirectoryStream(sourceDir)) {
+                for (Path filePath : ds) {
+                    if (!Files.isRegularFile(filePath)) continue;
+                    File file = filePath.toFile();
+                    try (FileInputStream fis = new FileInputStream(file)) {
+                        MultipartFile mf = new MockMultipartFile(
+                                file.getName(), file.getName(),
+                                "application/octet-stream", fis);
+                        importByFile(mf).join();
+                    } catch (Exception e) {
+                        log.error("Erreur d'import pour {}", file.getName(), e);
+                    }
+
+                    // Archivage après import
+                    try {
+                        if (!Files.exists(archiveDir)) {
+                            Files.createDirectories(archiveDir);
+                        }
+                        Path target = archiveDir.resolve(file.getName());
+                        Files.move(filePath, target, StandardCopyOption.REPLACE_EXISTING);
+                        log.info("Fichier '{}' archivé dans {}", file.getName(), archiveDir);
+                    } catch (IOException ioe) {
+                        log.error("Échec d'archivage pour {}", file.getName(), ioe);
+                    }
                 }
+            } catch (IOException e) {
+                log.error("Erreur lors du scanning du dossier {}", sourceDir, e);
             }
-        } catch (Exception e) {
-            log.error("Erreur lors du scanning du dossier {}", dir, e);
         }
     }
 
@@ -185,14 +200,11 @@ public class AccountImportService {
                      .withTrim()
                      .parse(reader)) {
 
-            // Mapping case-insensitive des headers
             Map<String, Integer> headers = parser.getHeaderMap().entrySet().stream()
                     .collect(Collectors.toMap(
                             e -> e.getKey().trim().toLowerCase(),
                             Map.Entry::getValue
                     ));
-
-            // Fonction pour récupérer l'index d'une colonne (anglais, puis français)
             Function<String[], Integer> colIndex = keys -> {
                 for (String k : keys) {
                     Integer idx = headers.get(k.toLowerCase());
@@ -254,10 +266,6 @@ public class AccountImportService {
         }
         return out;
     }
-
-    // ======================
-    // UTILS PARSING
-    // ======================
 
     private BigDecimal parseAmount(String s) {
         if (s == null || s.isBlank()) return BigDecimal.ZERO;
