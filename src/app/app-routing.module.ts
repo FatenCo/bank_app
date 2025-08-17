@@ -25,6 +25,8 @@ import { ProcessListComponent } from './components/process-list/process-list.com
 import { ProcessFormComponent } from './components/process-form/process-form.component';
 import { ProcessDetailComponent } from './components/process-detail/process-detail.component';
 import { ExecutionListComponent } from './components/execution-list/execution-list.component';
+import { ReconciliationListComponent } from './components/reconciliation-list/reconciliation-list.component';
+import { ReconciliationManualComponent } from './components/reconciliation-manual/reconciliation-manual.component';
 
 
 
@@ -39,13 +41,13 @@ const routes: Routes = [
   { path: 'user-detail/:id', component: UserDetailComponent },
   { path: 'user-edit/:id', component: UserEditComponent },
   { path: 'users-create', component: UserCreateComponent },
-    { path: 'manual', component: ManualImportComponent },
+  { path: 'manual', component: ManualImportComponent },
   { path: 'upload', component: FileUploadComponent },
   { path: 'status', component: ImportStatusComponent },
-    { path: 'accounts', component: AccountListComponent },
+  { path: 'accounts', component: AccountListComponent },
   { path: 'entries/view/:id', component: AccountDetailComponent },
   { path: 'entries/edit/:id', component: AccountFormComponent },
-    { path: 'stmts', component: StatementListComponent },
+  { path: 'stmts', component: StatementListComponent },
   { path: 'stmts/view/:id', component: StatementDetailComponent },
   { path: 'stmts/edit/:id', component: StatementFormComponent },
   { path: 'stmts/new', component: StatementFormComponent },
@@ -58,6 +60,12 @@ const routes: Routes = [
   { path: 'processes/edit/:id', component: ProcessFormComponent },
   { path: 'processes/view/:id', component: ProcessDetailComponent },
   { path: 'executions', component: ExecutionListComponent },
+  { path: 'reconciliations', component: ReconciliationListComponent },
+    { path: 'reconciliations/manual', component: ReconciliationManualComponent },
+
+
+
+
 
 
 

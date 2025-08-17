@@ -1,6 +1,31 @@
+/* Ajoutez ce style pour un meilleur affichage */
 .content-wrapper {
   margin-left: 250px;
   padding: 2rem;
   background: #f8f9fa;
   min-height: 100vh;
+}
+
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+table th {
+  background-color: #f4f6f9;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tbody tr:hover {
+  background-color: #f1f1f1;
 }

@@ -1,134 +1,92 @@
-<div class="content-wrapper">
-  <!-- Content Header -->
-  <div class="content-header">
-    <div class="container-fluid px-4">
-      <div class="row mb-3">
-        <div class="col-sm-6">
-          <h1 class="m-0 text-primary fw-bold">Dashboard</h1>
-        </div>
-        <div class="col-sm-6 text-end">
-          <ol class="breadcrumb mb-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
-            <li class="breadcrumb-item active text-secondary">Dashboard</li>
-          </ol>
-        </div>
-      </div>
+<div class="dashboard-container">
+  <h1>Dashboard</h1>
 
-      <!-- KPI Cards -->
-      <div class="row g-4 mb-5">
-        <!-- Exemple de KPI -->
-        <div class="col-md-3">
-          <div class="card shadow-sm border-0 h-100 hover-scale">
-            <div class="card-body text-center">
-              <div class="icon mb-3 text-danger"><i class="fas fa-exclamation-triangle fa-2x"></i></div>
-              <h3 class="fw-bold mb-1">12</h3>
-              <p class="text-muted mb-0">Erreurs d'importation</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card shadow-sm border-0 h-100 hover-scale">
-            <div class="card-body text-center">
-              <div class="icon mb-3 text-success"><i class="fas fa-check-circle fa-2x"></i></div>
-              <h3 class="fw-bold mb-1">240</h3>
-              <p class="text-muted mb-0">Imports réussis</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card shadow-sm border-0 h-100 hover-scale">
-            <div class="card-body text-center">
-              <div class="icon mb-3 text-warning"><i class="fas fa-user-plus fa-2x"></i></div>
-              <h3 class="fw-bold mb-1">35</h3>
-              <p class="text-muted mb-0">Nouveaux utilisateurs</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card shadow-sm border-0 h-100 hover-scale">
-            <div class="card-body text-center">
-              <div class="icon mb-3 text-info"><i class="fas fa-chart-line fa-2x"></i></div>
-              <h3 class="fw-bold mb-1">85%</h3>
-              <p class="text-muted mb-0">Taux de réussite</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Charts + Tabs -->
-      <div class="card mb-5 shadow-sm border-0">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-          <h3 class="card-title fw-semibold mb-0"><i class="fas fa-chart-area me-2"></i>Tendance des Imports</h3>
-          <ul class="nav nav-pills card-header-pills">
-            <li class="nav-item">
-              <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#chart-area">Area</button>
-            </li>
-            <li class="nav-item">
-              <button class="nav-link" data-bs-toggle="pill" data-bs-target="#chart-donut">Donut</button>
-            </li>
-          </ul>
-        </div>
-        <div class="card-body bg-light">
-          <div class="tab-content">
-            <div class="tab-pane fade show active" id="chart-area">
-              <canvas id="area-chart" style="min-height:300px;"></canvas>
-            </div>
-            <div class="tab-pane fade" id="chart-donut">
-              <canvas id="donut-chart" style="min-height:300px;"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Table des Erreurs -->
-      <div class="card shadow-sm border-0">
-        <div class="card-header bg-white">
-          <h3 class="card-title fw-semibold mb-0"><i class="fas fa-exclamation-circle me-2 text-danger"></i>Détails des Erreurs</h3>
-        </div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-              <thead class="table-light">
-                <tr>
-                  <th>Date</th>
-                  <th>Type</th>
-                  <th>Count</th>
-                  <th>Dernière Occ.</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="hover-row">
-                  <td>05/05/2025</td>
-                  <td>Validation</td>
-                  <td>8</td>
-                  <td>14:23:10</td>
-                </tr>
-                <tr class="hover-row">
-                  <td>04/05/2025</td>
-                  <td>Connexion</td>
-                  <td>4</td>
-                  <td>09:15:45</td>
-                </tr>
-                <tr class="hover-row">
-                  <td>03/05/2025</td>
-                  <td>Timeout</td>
-                  <td>12</td>
-                  <td>17:50:02</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div *ngIf="isLoading" class="loading">
+    <p>Chargement des données...</p>
   </div>
 
-  <!-- Custom Styles -->
-  <style>
-    .hover-scale { transition: transform .3s; }
-    .hover-scale:hover { transform: translateY(-5px); }
-    .hover-row:hover { background-color: rgba(13,110,253,0.05); }
-    .card-header-pills .nav-link { border-radius: 1rem; margin-right: .5rem; }
-    .card-header-pills .nav-link.active { background-color: #0d6efd; color: #fff; }
-    .breadcrumb .breadcrumb-item + .breadcrumb-item::before { content: ">"; color: #6c757d; }
-  </style>
+  <div *ngIf="!isLoading">
+    <!-- Transaction Volume -->
+    <div class="home-section">
+      <h2>Volume des transactions par période</h2>
+      <div *ngIf="getObjectKeys(transactionVolume).length > 0; else noTransactionData">
+        <div *ngFor="let entry of getObjectEntries(transactionVolume)" class="data-item">
+          <p><strong>{{ entry.key }}</strong> : {{ entry.value }} transactions</p>
+        </div>
+      </div>
+      <ng-template #noTransactionData>
+        <p class="no-data">Aucune donnée de transaction disponible</p>
+      </ng-template>
+    </div>
+
+    <!-- Reconciliation Status -->
+    <div class="home-section">
+      <h2>Statut des réconciliations</h2>
+      <div *ngIf="getObjectKeys(reconciliationStatusCount).length > 0; else noStatusData">
+        <div *ngFor="let entry of getObjectEntries(reconciliationStatusCount)" class="data-item">
+          <p><strong>{{ formatStatusKey(entry.key) }}</strong> : {{ entry.value }} réconciliations</p>
+        </div>
+      </div>
+      <ng-template #noStatusData>
+        <p class="no-data">Aucune donnée de statut disponible</p>
+      </ng-template>
+    </div>
+
+    <!-- Reconciliation Performance -->
+    <div class="home-section">
+      <h2>Performances des réconciliations</h2>
+      <div *ngIf="getObjectKeys(reconciliationPerformance).length > 0; else noPerformanceData">
+        <div *ngFor="let entry of getObjectEntries(reconciliationPerformance)" class="data-item">
+          <p><strong>{{ formatStatusKey(entry.key) }}</strong> : {{ entry.value | number:'1.2-2' }}</p>
+        </div>
+      </div>
+      <ng-template #noPerformanceData>
+        <p class="no-data">Aucune donnée de performance disponible</p>
+      </ng-template>
+    </div>
+
+    <!-- Pending Transactions -->
+    <div class="home-section">
+      <h2>Transactions en attente</h2>
+      <div *ngIf="pendingTransactions.length > 0; else noPendingData">
+        <div class="transaction-list">
+          <div *ngFor="let transaction of pendingTransactions; let i = index" class="data-item">
+            <p><strong>Transaction ID :</strong> {{ transaction }}</p>
+          </div>
+          <div *ngIf="pendingTransactions.length > 10" class="more-items">
+            <p>... et {{ pendingTransactions.length - 10 }} autres transactions</p>
+          </div>
+        </div>
+      </div>
+      <ng-template #noPendingData>
+        <p class="no-data">Aucune transaction en attente</p>
+      </ng-template>
+    </div>
+
+    <!-- Unmatched Reconciliations -->
+    <div class="home-section">
+      <h2>Réconciliations non appariées</h2>
+      <div *ngIf="unmatchedReconciliations.length > 0; else noUnmatchedData">
+        <div class="reconciliation-list">
+          <div *ngFor="let rec of unmatchedReconciliations; let i = index" class="data-item">
+            <p><strong>Réconciliation ID :</strong> {{ rec.id }}</p>
+            <p><strong>Montant :</strong> {{ rec.matchingAmount | number:'1.2-2' }}</p>
+            <p><strong>Date :</strong> {{ rec.reconciliationDate | date:'short' }}</p>
+          </div>
+          <div *ngIf="unmatchedReconciliations.length > 5" class="more-items">
+            <p>... et {{ unmatchedReconciliations.length - 5 }} autres réconciliations</p>
+          </div>
+        </div>
+      </div>
+      <ng-template #noUnmatchedData>
+        <p class="no-data">Aucune réconciliation non appariée</p>
+      </ng-template>
+    </div>
+
+    <!-- Reconciliation Status Summary -->
+    <div class="home-section status-summary">
+      <h2>Statut Global de la Réconciliation</h2>
+      <p class="summary-text">{{ reconciliationStatusSummary }}</p>
+    </div>
+  </div>
+</div>

@@ -1,54 +1,75 @@
-<div class="content-wrapper">
-  <div class="form-container">
-    <h2>{{ editing ? 'Modifier' : 'Créer' }} un Process</h2>
+<div class="form-wrapper">
+  <div class="form-card">
+    <div class="form-header">
+      <h2>{{ editing ? 'Modifier' : 'Créer' }} un processus</h2>
+      <p class="subtitle">{{ editing ? 'Mettez à jour les détails du processus' : 'Configurez un nouveau processus' }}</p>
+    </div>
+
     <form [formGroup]="form" (ngSubmit)="save()">
-
-      <div class="form-group">
-        <label>Nom</label>
-        <input class="form-control" formControlName="name" />
-      </div>
-
-      <div class="form-group">
-        <label>Description</label>
-        <textarea class="form-control" formControlName="description"></textarea>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Type</label>
-          <select class="form-select" formControlName="type">
-            <option *ngFor="let t of types" [value]="t">{{ t }}</option>
-          </select>
+      <div class="form-grid">
+        <div class="input-group">
+          <label>Nom du processus</label>
+          <div class="input-container">
+            <input type="text" formControlName="name" placeholder="Entrez un nom unique">
+            <i class="icon icon-document"></i>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Mode</label>
-          <select class="form-select" formControlName="mode">
-            <option *ngFor="let m of modes" [value]="m">{{ m }}</option>
-          </select>
+
+        <div class="input-group">
+          <label>Description</label>
+          <div class="input-container">
+            <textarea formControlName="description" placeholder="Décrivez l'objectif du processus"></textarea>
+            <i class="icon icon-info"></i>
+          </div>
         </div>
-        <div class="form-group align-end">
-          <label class="form-check-label me-2">Activé</label>
-          <input type="checkbox" class="form-check-input" formControlName="enabled" />
+
+        <div class="input-group">
+          <label>Type de processus</label>
+          <div class="input-container">
+            <select formControlName="type">
+              <option *ngFor="let t of types" [value]="t">{{ getTypeName(t) }}</option>
+            </select>
+            <i class="icon icon-type"></i>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Mode d'exécution</label>
+          <div class="input-container">
+            <select formControlName="mode">
+              <option *ngFor="let m of modes" [value]="m">{{ getModeName(m) }}</option>
+            </select>
+            <i class="icon icon-mode"></i>
+          </div>
+        </div>
+
+        <div class="toggle-group">
+          <label>Statut</label>
+          <label class="toggle-switch">
+            <input type="checkbox" formControlName="enabled">
+            <span class="slider"></span>
+          </label>
+          <span class="toggle-label">{{ form.get('enabled')?.value ? 'Activé' : 'Désactivé' }}</span>
+        </div>
+
+        <div *ngIf="form.get('mode')?.value === 'SCHEDULED'" class="input-group full-width">
+          <label>Planification</label>
+          <div class="input-container">
+            <input type="datetime-local" formControlName="scheduledAt">
+            <i class="icon icon-calendar"></i>
+          </div>
+          <div class="hint">Le processus s'exécutera automatiquement à cette date/heure</div>
         </div>
       </div>
 
-      <!-- Date + heure si Scheduled -->
-      <div *ngIf="form.get('mode')!.value==='SCHEDULED'" class="form-group mt-3">
-        <label>Date & heure de planification</label>
-        <input
-          type="datetime-local"
-          class="form-control"
-          formControlName="scheduledAt"
-        />
-      </div>
-
-      <div class="mt-4">
-        <button type="button" class="btn btn-secondary me-2" (click)="back()">Annuler</button>
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="back()">
+          <i class="icon icon-cancel"></i> Annuler
+        </button>
         <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
-          {{ editing ? 'Mettre à jour' : 'Créer' }}
+          <i class="icon icon-save"></i> {{ editing ? 'Mettre à jour' : 'Créer' }}
         </button>
       </div>
-
     </form>
   </div>
 </div>

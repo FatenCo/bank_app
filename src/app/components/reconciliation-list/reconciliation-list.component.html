@@ -1,0 +1,52 @@
+<div class="content-wrapper">
+  <div class="container">
+    <h2>Réconciliations Appariées</h2>
+
+    <!-- Correction: remplacer loading par isLoading -->
+    <div *ngIf="isLoading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+    </div>
+
+    <!-- Correction: remplacer errorMessage par error -->
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <!-- Correction: remplacer loading par isLoading -->
+    <div *ngIf="!isLoading && matchedReconciliations.length === 0" class="alert alert-info">
+      Aucune réconciliation appariée.
+    </div>
+
+    <!-- Correction: remplacer loading par isLoading -->
+    <table *ngIf="!isLoading && matchedReconciliations.length > 0" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Compte</th>
+          <th>Montant Compte</th>
+          <th>Montant Relevé</th>
+          <th>Date Réconciliation</th>
+          <th>Type</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of matchedReconciliations">
+          <td>{{ r.accountEntry.accountNumber }}</td>
+          <td>{{ r.accountEntry.total }}</td>
+          <td>{{ r.statementEntry.amtFcy }}</td>
+          <td>{{ r.reconciliationDate | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <span *ngIf="r.autoMatched" class="badge bg-success">Automatique</span>
+            <span *ngIf="r.manualMatched" class="badge bg-info">Manuelle</span>
+          </td>
+          <td>
+            <!-- Correction: remplacer unreconcile par unmatchReconciliation -->
+            <button class="btn btn-danger btn-sm" (click)="unmatchReconciliation(r.id)">
+              Annuler
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

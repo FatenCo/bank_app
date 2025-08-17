@@ -1,0 +1,155 @@
+<div class="reconciliation-container">
+  <div class="header">
+    <h1>Réconciliation Manuelle</h1>
+    <p>Sélectionnez et rapprochez les comptes avec leurs relevés correspondants</p>
+  </div>
+
+  <!-- Barre de recherche globale -->
+  <div class="search-bar">
+    <div class="search-field">
+      <input 
+        type="text" 
+        [(ngModel)]="globalSearch" 
+        placeholder="Recherche globale - Numéro de compte, montant..."
+        class="search-input">
+      <span class="search-icon">🔍</span>
+    </div>
+  </div>
+
+  <div class="reconciliation-layout">
+    <!-- Section des comptes -->
+    <div class="section accounts-section">
+      <div class="section-header">
+        <h2>
+          <span class="icon">🏦</span>
+          Comptes non appariés
+          <span *ngIf="accounts.length" class="badge">{{ filteredAccounts.length }}</span>
+        </h2>
+        <div class="search-field section-search">
+          <input 
+            type="text" 
+            [(ngModel)]="accountSearch" 
+            placeholder="Filtrer les comptes"
+            class="search-input">
+          <span class="search-icon">📋</span>
+        </div>
+      </div>
+
+      <div *ngIf="isLoadingAccounts" class="loading-section">
+        <div class="spinner"></div>
+        <span>Chargement des comptes...</span>
+      </div>
+
+      <div *ngIf="!isLoadingAccounts && filteredAccounts.length === 0" class="empty-state">
+        <span class="empty-icon">✅</span>
+        <p>Tous les comptes sont rapprochés</p>
+      </div>
+
+      <div class="card-grid">
+        <div *ngFor="let account of filteredAccounts" class="account-card">
+          <div class="card-header">
+            <div class="account-info">
+              <div class="account-number">
+                <span class="icon">💳</span>
+                {{ account.accountNumber }}
+              </div>
+              <div class="account-amount">
+                {{ formatCurrency(account.total) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="statement-selection">
+            <div class="select-field">
+              <label class="select-label">Sélectionner un relevé</label>
+              <select [(ngModel)]="selectedStatementMap[account.id]" class="select-input">
+                <option [ngValue]="null">-- Aucun sélectionné --</option>
+                <option 
+                  *ngFor="let stmt of getStatementsForAccount(account.accountNumber)" 
+                  [ngValue]="stmt" 
+                  [disabled]="isStatementUsed(stmt.id)">
+                  {{ formatCurrency(stmt.amtFcy) }} ({{ stmt.statementDate | date:'dd/MM/yyyy' }})
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div *ngIf="selectedStatementMap[account.id]">
+            <div *ngIf="getDifferenceInfo(account, selectedStatementMap[account.id]) as diffInfo" 
+                 class="difference-info" [class]="diffInfo.cssClass">
+              {{ diffInfo.message }}
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button 
+              class="btn btn-primary" 
+              (click)="manualReconcile(account)"
+              [disabled]="!selectedStatementMap[account.id] || reconciliationInProgress[account.id]">
+              <span *ngIf="!reconciliationInProgress[account.id]">Rapprocher</span>
+              <span *ngIf="reconciliationInProgress[account.id]" class="button-loading">
+                <div class="mini-spinner"></div> Traitement...
+              </span>
+            </button>
+            
+            <button 
+              class="btn btn-secondary" 
+              *ngIf="selectedStatementMap[account.id]"
+              (click)="checkDifference(account)">
+              <span class="icon">🧮</span> Vérifier différence
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section des relevés -->
+    <div class="section statements-section">
+      <div class="section-header">
+        <h2>
+          <span class="icon">📄</span>
+          Relevés non appariés
+          <span *ngIf="statements.length" class="badge">{{ filteredStatements.length }}</span>
+        </h2>
+        <div class="search-field section-search">
+          <input 
+            type="text" 
+            [(ngModel)]="statementSearch" 
+            placeholder="Filtrer les relevés"
+            class="search-input">
+          <span class="search-icon">📋</span>
+        </div>
+      </div>
+
+      <div *ngIf="isLoadingStatements" class="loading-section">
+        <div class="spinner"></div>
+        <span>Chargement des relevés...</span>
+      </div>
+
+      <div *ngIf="!isLoadingStatements && filteredStatements.length === 0" class="empty-state">
+        <span class="empty-icon">✅</span>
+        <p>Tous les relevés sont rapprochés</p>
+      </div>
+
+      <div class="card-list">
+        <div *ngFor="let stmt of filteredStatements" class="statement-card">
+          <div class="statement-info">
+            <div class="account-number">
+              <span class="icon">💼</span>
+              {{ stmt.accountNumber }}
+            </div>
+            <div class="statement-details">
+              <div class="amount">{{ formatCurrency(stmt.amtFcy) }}</div>
+              <div class="date">
+                <span class="icon">📅</span>
+                {{ stmt.statementDate | date:'dd/MM/yyyy' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

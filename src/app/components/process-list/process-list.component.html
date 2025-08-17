@@ -1,61 +1,99 @@
-<div class="content-wrapper">
-  <div class="list-header">
-    <h2>Liste des Process</h2>
-    <button class="btn btn-primary" (click)="create()">
-      <i class="bi bi-plus-lg"></i> Nouveau
+<div class="process-list-container">
+  <div class="header-section">
+    <div>
+      <h1>Gestion des processus</h1>
+      <p>Configurez et supervisez vos processus automatisés</p>
+    </div>
+    <button class="create-btn" (click)="create()">
+      <i class="icon icon-plus"></i> Nouveau processus
     </button>
   </div>
 
-  <table class="table table-hover modern-table">
-    <thead>
-      <tr>
-        <th>Nom</th>
-        <th>Type</th>
-        <th>Mode</th>
-        <th>Statut</th>
-        <th class="text-center">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let p of processes">
-        <td>{{ p.name }}</td>
-        <td>{{ p.type }}</td>
-        <td>{{ p.mode }}</td>
-        <td>{{ p.enabled ? 'Actif' : 'Inactif' }}</td>
-        <td class="text-center">
-          <div class="btn-group" role="group">
-            <!-- Démarrer / Arrêter -->
-            <button
-              class="btn btn-outline-success btn-sm"
-              (click)="start(p)"
-              [disabled]="!p.enabled || p.mode==='MANUAL'"
-              title="Démarrer"
-            >
-              <i class="bi bi-play-fill"></i>
-            </button>
-            <button
-              class="btn btn-outline-warning btn-sm"
-              (click)="stop(p)"
-              title="Arrêter"
-            >
-              <i class="bi bi-stop-fill"></i>
-            </button>
-            <!-- CRUD -->
-            <button class="btn btn-outline-info btn-sm" (click)="view(p.id!)" title="Consulter">
-              <i class="bi bi-eye"></i>
-            </button>
-            <button class="btn btn-outline-primary btn-sm" (click)="edit(p.id!)" title="Modifier">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn btn-outline-danger btn-sm" (click)="delete(p.id!)" title="Supprimer">
-              <i class="bi bi-trash"></i>
-            </button>
+  <div class="search-bar">
+    <div class="search-container">
+      <i class="icon icon-search"></i>
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery" 
+        placeholder="Rechercher un processus..."
+      >
+    </div>
+    <button class="refresh-btn" (click)="loadAll()">
+      <i class="icon icon-refresh"></i> Actualiser
+    </button>
+  </div>
+
+  <div class="content-section">
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Chargement des processus...</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-state">
+      <i class="icon icon-error"></i>
+      <p>{{ errorMessage }}</p>
+      <button (click)="loadAll()">Réessayer</button>
+    </div>
+
+    <div *ngIf="!loading && filteredProcesses.length === 0" class="empty-state">
+      <i class="icon icon-empty"></i>
+      <p>Aucun processus configuré</p>
+      <button (click)="create()">Créer un processus</button>
+    </div>
+
+    <div *ngIf="!loading && filteredProcesses.length > 0" class="process-grid">
+      <div *ngFor="let p of filteredProcesses" class="process-card">
+        <div class="card-header">
+          <div class="process-type" [class]="'type-' + p.type.toLowerCase()">
+            {{ getTypeText(p.type).charAt(0) }}
           </div>
-        </td>
-      </tr>
-      <tr *ngIf="!loading && processes.length === 0">
-        <td colspan="5" class="text-center text-muted">Aucun process trouvé</td>
-      </tr>
-    </tbody>
-  </table>
+          <div>
+            <h3>{{ p.name }}</h3>
+            <p class="description">{{ p.description || 'Aucune description' }}</p>
+          </div>
+        </div>
+
+        <div class="card-details">
+          <div class="detail-item">
+            <span class="detail-label">Type</span>
+            <span class="detail-value">{{ getTypeText(p.type) }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Mode</span>
+            <span class="detail-value">{{ getModeText(p.mode) }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Statut</span>
+            <span [class]="getStatusClass(p.enabled)">{{ getStatusText(p.enabled) }}</span>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button class="action-btn" (click)="view(p.id!)" title="Voir détails">
+            <i class="icon icon-view"></i>
+          </button>
+          <button class="action-btn" (click)="edit(p.id!)" title="Modifier">
+            <i class="icon icon-edit"></i>
+          </button>
+          <button class="action-btn delete" (click)="delete(p.id!)" title="Supprimer">
+            <i class="icon icon-delete"></i>
+          </button>
+          <button 
+            class="action-btn start" 
+            (click)="start(p)" 
+            [disabled]="!p.enabled"
+            title="Démarrer">
+            <i class="icon icon-start"></i>
+          </button>
+          <button 
+            class="action-btn stop" 
+            (click)="stop(p)" 
+            [disabled]="p.mode !== 'SCHEDULED' || !p.enabled"
+            title="Arrêter">
+            <i class="icon icon-stop"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

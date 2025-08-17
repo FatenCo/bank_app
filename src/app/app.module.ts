@@ -5,6 +5,19 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button'; 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -35,6 +48,8 @@ import { ProcessListComponent } from './components/process-list/process-list.com
 import { ProcessFormComponent } from './components/process-form/process-form.component';
 import { ProcessDetailComponent } from './components/process-detail/process-detail.component';
 import { ExecutionListComponent } from './components/execution-list/execution-list.component';
+import { ReconciliationListComponent } from './components/reconciliation-list/reconciliation-list.component';
+import { ReconciliationManualComponent } from './components/reconciliation-manual/reconciliation-manual.component';
 
 
 
@@ -70,14 +85,29 @@ import { ExecutionListComponent } from './components/execution-list/execution-li
     ProcessListComponent,
     ProcessFormComponent,
     ProcessDetailComponent,
-    ExecutionListComponent
-        ],
+    ExecutionListComponent,
+    ReconciliationListComponent,
+    ReconciliationManualComponent
+            ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    MatSnackBarModule,
+    ReactiveFormsModule,
+     MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatProgressBarModule,
+    MatCardModule,
+    MatDividerModule,
+    MatDialogModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

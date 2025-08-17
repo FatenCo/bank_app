@@ -1,0 +1,127 @@
+/* Style global du body */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;  /* Largeur fixe de la sidebar */
+  background-color: #343a40;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+/* Contenu principal */
+.content-wrapper {
+  margin-left: 250px;  /* Laisser de l'espace pour la sidebar */
+  padding: 20px;
+  width: calc(100% - 250px);  /* Reste de l'espace disponible après la sidebar */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Conteneur principal */
+.container {
+  margin-top: 2rem;
+  padding: 20px;
+  max-width: 100%;
+}
+
+/* Spinner centré */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.5rem;
+  display: block;
+  margin: 0 auto;
+  margin-top: 2rem;
+}
+
+/* Alertes */
+.alert {
+  margin-top: 1rem;
+}
+
+/* Style pour le tableau */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th,
+.table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.table-striped tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.table-striped tbody tr:hover {
+  background-color: #e2f0ff;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Boutons */
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+/* Ajouter une classe pour les lignes sans réconciliation */
+.alert-info {
+  text-align: center;
+  color: #6c757d;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+/* Responsivité */
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 200px; /* Réduit la largeur de la sidebar pour les petits écrans */
+  }
+
+  .content-wrapper {
+    margin-left: 0;  /* Enlève la marge gauche sur mobile */
+    width: 100%; /* Utilise toute la largeur disponible */
+  }
+
+  .container {
+    padding: 10px;  /* Réduit le padding sur mobile */
+  }
+}

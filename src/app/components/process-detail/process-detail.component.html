@@ -19,5 +19,51 @@
     <dd class="col-sm-9">{{ pd?.enabled ? 'Actif' : 'Inactif' }}</dd>
   </dl>
 
-  <app-execution-list [definitionId]="definitionId"></app-execution-list>
+  <!-- Section des exécutions -->
+  <h3>Historique des Exécutions</h3>
+  
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+  
+  <!-- Message de chargement -->
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Chargement...</span>
+    </div>
+  </div>
+
+  <table *ngIf="executions.length > 0" class="table">
+    <thead>
+      <tr>
+        <th>Statut</th>
+        <th>Message</th>
+        <th>Début</th>
+        <th>Fin</th>
+        <th>Durée</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let exec of executions" [ngClass]="{
+        'table-success': exec.status === 'SUCCESS',
+        'table-danger': exec.status === 'FAILED',
+        'table-info': exec.status === 'RUNNING'
+      }">
+        <td>
+          <span *ngIf="exec.status === 'RUNNING'" class="badge bg-info">En cours</span>
+          <span *ngIf="exec.status === 'SUCCESS'" class="badge bg-success">Succès</span>
+          <span *ngIf="exec.status === 'FAILED'" class="badge bg-danger">Échec</span>
+        </td>
+        <td>{{ exec.message || '-' }}</td>
+        <td>{{ exec.startTime | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        <td>{{ exec.endTime ? (exec.endTime | date:'dd/MM/yyyy HH:mm:ss') : '-' }}</td>
+        <td>{{ calculateDuration(exec.startTime, exec.endTime) }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div *ngIf="executions.length === 0 && !isLoading" class="alert alert-info">
+    Aucune exécution enregistrée pour ce processus
+  </div>
 </div>

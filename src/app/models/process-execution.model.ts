@@ -1,4 +1,3 @@
-// src/app/models/process-execution.model.ts
 export enum ProcessExecStatus {
   RUNNING = 'RUNNING',
   SUCCESS = 'SUCCESS',
@@ -7,12 +6,8 @@ export enum ProcessExecStatus {
 
 export interface ProcessExecution {
   id: string;
-  status: string;
+  status: ProcessExecStatus;
   message: string;
   startTime: string;
-  endTime: string;
-  definition: {
-    id: string;
-    name: string;
-}
+  endTime: string | null;
 }
