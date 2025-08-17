@@ -2,6 +2,8 @@ package com.bank.app.lettrage.repository;
 
 import com.bank.app.lettrage.entity.ImportJob;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,4 +42,6 @@ public interface ImportJobRepository extends JpaRepository<ImportJob, UUID> {
      * Récupère le dernier job pour un fichier.
      */
     Optional<ImportJob> findTopBySourceOrderByStartedAtDesc(String source);
+    @Query("SELECT COUNT(ij) FROM ImportJob ij WHERE ij.status = :status")
+    long countByStatus(@Param("status") String status);
 }

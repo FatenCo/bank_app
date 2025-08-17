@@ -1,12 +1,14 @@
-// src/main/java/com/bank/app/lettrage/controller/ProcessController.java
 package com.bank.app.lettrage.controller;
 
-import com.bank.app.lettrage.entity.*;
+import com.bank.app.lettrage.entity.ProcessDefinition;
+import com.bank.app.lettrage.entity.ProcessExecution;
 import com.bank.app.lettrage.service.ProcessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/processes")
@@ -19,54 +21,104 @@ public class ProcessController {
     }
 
     @GetMapping
-    public List<ProcessDefinition> list() {
-        return svc.listDefinitions();
+    public ResponseEntity<?> list() {
+        try {
+            return ResponseEntity.ok(svc.listDefinitions());
+        } catch (Exception e) {
+            return errorResponse("Erreur lors de la récupération des processus", e);
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProcessDefinition> get(@PathVariable UUID id) {
-        return svc.getDefinition(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> get(@PathVariable UUID id) {
+        try {
+            return svc.getDefinition(id)
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return errorResponse("Erreur lors de la récupération du processus", e);
+        }
     }
 
     @PostMapping
-    public ProcessDefinition create(@RequestBody ProcessDefinition pd) {
-        return svc.createDefinition(pd);
+    public ResponseEntity<?> create(@RequestBody ProcessDefinition pd) {
+        try {
+            return ResponseEntity.ok(svc.createDefinition(pd));
+        } catch (Exception e) {
+            return errorResponse("Erreur lors de la création du processus", e);
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProcessDefinition> update(
-            @PathVariable UUID id,
-            @RequestBody ProcessDefinition pd
-    ) {
-        return svc.updateDefinition(id, pd)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody ProcessDefinition pd) {
+        try {
+            return svc.updateDefinition(id, pd)
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return errorResponse("Erreur lors de la mise à jour du processus", e);
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        svc.deleteDefinition(id);
-        return ResponseEntity.noContent().build();
+        try {
+            svc.deleteDefinition(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
-    /** Exécution immédiate **/
     @PostMapping("/{id}/run")
-    public ProcessExecution runNow(@PathVariable UUID id) {
-        return svc.runNow(id);
+    public ResponseEntity<?> runNow(@PathVariable UUID id) {
+        try {
+            ProcessExecution exec = svc.runNow(id);
+            return ResponseEntity.ok(Map.of(
+                    "status", "success",
+                    "executionId", exec.getId(),
+                    "processStatus", exec.getStatus().toString(),
+                    "message", "Processus lancé avec succès"
+            ));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).body(Map.of(
+                    "status", "error",
+                    "message", "Processus non trouvé"
+            ));
+        } catch (Exception e) {
+            return errorResponse("Échec d'exécution du processus", e);
+        }
     }
 
-    /** Arrêt d’une planification Cron **/
     @PostMapping("/{id}/stop")
-    public ResponseEntity<Void> stop(@PathVariable UUID id) {
-        svc.stopSchedule(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> stop(@PathVariable UUID id) {
+        try {
+            svc.stopSchedule(id);
+            return ResponseEntity.ok(Map.of(
+                    "status", "success",
+                    "message", "Planification arrêtée"
+            ));
+        } catch (Exception e) {
+            return errorResponse("Erreur lors de l'arrêt de la planification", e);
+        }
     }
 
-    /** Récupérer les exécutions passées **/
     @GetMapping("/{id}/executions")
-    public List<ProcessExecution> listExecutions(@PathVariable UUID id) {
-        return svc.listExecutions(id);
+    public ResponseEntity<?> listExecutions(@PathVariable UUID id) {
+        try {
+            return ResponseEntity.ok(svc.listExecutions(id));
+        } catch (Exception e) {
+            return errorResponse("Erreur lors de la récupération de l'historique", e);
+        }
+    }
+
+    private ResponseEntity<Map<String, String>> errorResponse(String message, Exception e) {
+        String errorMsg = message + ": " +
+                (e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
+
+        return ResponseEntity.internalServerError().body(Map.of(
+                "status", "error",
+                "message", errorMsg
+        ));
     }
 }

@@ -1,6 +1,7 @@
-// src/main/java/com/bank/app/lettrage/entity/ProcessExecution.java
+
 package com.bank.app.lettrage.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -10,16 +11,13 @@ import java.util.UUID;
 public class ProcessExecution {
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "definition_id")
+    @JsonIgnore // Empêche la sérialisation de la relation
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "definition_id", nullable = false)
     private ProcessDefinition definition;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ProcessExecStatus status;
 
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
@@ -27,30 +25,71 @@ public class ProcessExecution {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    @Lob
+    @Column(length = 1024)
     private String message;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProcessExecStatus status;
+
     public ProcessExecution() {
-        this.startTime = LocalDateTime.now();
+        // pour JPA
     }
 
-    // -- getters & setters --
+    public ProcessExecution(ProcessDefinition definition, LocalDateTime startTime, ProcessExecStatus status) {
+        this.id = UUID.randomUUID();
+        this.definition = definition;
+        this.startTime = startTime;
+        this.status = status;
+    }
 
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    // --- Getters & Setters ---
 
-    public ProcessDefinition getDefinition() { return definition; }
-    public void setDefinition(ProcessDefinition definition) { this.definition = definition; }
+    public UUID getId() {
+        return id;
+    }
 
-    public ProcessExecStatus getStatus() { return status; }
-    public void setStatus(ProcessExecStatus status) { this.status = status; }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-    public LocalDateTime getStartTime() { return startTime; }
-    public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
+    public ProcessDefinition getDefinition() {
+        return definition;
+    }
 
-    public LocalDateTime getEndTime() { return endTime; }
-    public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
+    public void setDefinition(ProcessDefinition definition) {
+        this.definition = definition;
+    }
 
-    public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public ProcessExecStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProcessExecStatus status) {
+        this.status = status;
+    }
 }

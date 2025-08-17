@@ -1,43 +1,57 @@
-// src/main/java/com/bank/app/lettrage/entity/ProcessDefinition.java
 package com.bank.app.lettrage.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Définit un process (import comptes, import statements, ou réconciliation).
+ */
+@Getter
 @Entity
 @Table(name = "process_definition")
 public class ProcessDefinition {
 
+    @Setter
     @Id
-    private UUID id;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
 
-    @Column(nullable = false)
+    @Setter
+    @Column(nullable = false, length = 200)
     private String name;
 
+    @Setter
+    @Column(length = 1024)
     private String description;
 
+    @Setter
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private ProcessType type;
 
+    @Setter
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private ProcessMode mode;
 
+    @Setter
     @Column(nullable = false)
     private boolean enabled;
 
-    @Column(name = "cron_expression")
+    @Setter
+    @Column(name = "cron_expression", length = 200)
     private String cronExpression;
 
-    @Column(name = "cron_description")
+    @Setter
+    @Column(name = "cron_description", length = 200)
     private String cronDescription;
 
-    // --- AJOUT pour timestamps ---
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -46,36 +60,30 @@ public class ProcessDefinition {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // --- getters / setters ---
-
     public ProcessDefinition() {
-        this.id = UUID.randomUUID();
+        // pour JPA
     }
 
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public ProcessDefinition(String name,
+                             String description,
+                             ProcessType type,
+                             ProcessMode mode,
+                             boolean enabled,
+                             String cronExpression,
+                             String cronDescription) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.mode = mode;
+        this.enabled = enabled;
+        this.cronExpression = cronExpression;
+        this.cronDescription = cronDescription;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    // --- Getters & Setters ---
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    // pas de setter pour createdAt (géré par Hibernate)
 
-    public ProcessType getType() { return type; }
-    public void setType(ProcessType type) { this.type = type; }
-
-    public ProcessMode getMode() { return mode; }
-    public void setMode(ProcessMode mode) { this.mode = mode; }
-
-    public boolean isEnabled() { return enabled; }
-    public void setEnabled(boolean enabled) { this.enabled = enabled; }
-
-    public String getCronExpression() { return cronExpression; }
-    public void setCronExpression(String cronExpression) { this.cronExpression = cronExpression; }
-
-    public String getCronDescription() { return cronDescription; }
-    public void setCronDescription(String cronDescription) { this.cronDescription = cronDescription; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    // pas de setter pour updatedAt (géré par Hibernate)
 }

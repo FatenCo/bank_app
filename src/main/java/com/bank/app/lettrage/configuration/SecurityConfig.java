@@ -55,6 +55,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/stmts/**").permitAll()
                         .requestMatchers("/api/config/directories/**").permitAll()
                         .requestMatchers("/api/processes/**").permitAll()
+                        .requestMatchers("/api/reconciliations/**").permitAll()
+                        .requestMatchers("/api/dashboard/**").permitAll()
+
+
                         // allow pre-flight
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
