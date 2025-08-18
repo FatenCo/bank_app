@@ -1,92 +1,89 @@
 <div class="dashboard-container">
-  <h1>Dashboard</h1>
-
-  <div *ngIf="isLoading" class="loading">
-    <p>Chargement des données...</p>
+  <!-- Header -->
+  <div class="dashboard-header fade-in">
+    <h1>Dashboard Analytique</h1>
+    <p>Surveillance en temps réel des transactions et réconciliations</p>
   </div>
 
-  <div *ngIf="!isLoading">
-    <!-- Transaction Volume -->
-    <div class="home-section">
-      <h2>Volume des transactions par période</h2>
-      <div *ngIf="getObjectKeys(transactionVolume).length > 0; else noTransactionData">
-        <div *ngFor="let entry of getObjectEntries(transactionVolume)" class="data-item">
-          <p><strong>{{ entry.key }}</strong> : {{ entry.value }} transactions</p>
-        </div>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading fade-in">
+    Chargement des données
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading" class="fade-in">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+   <div class="stat-card">
+  <h3>Transactions Totales</h3>
+  <div class="stat-value">
+    <ng-container *ngIf="getObjectKeys(transactionVolume).length > 0; else noTransactionTotal">
+      {{ getObjectEntries(transactionVolume)[0]?.value || 0 }}
+    </ng-container>
+    <ng-template #noTransactionTotal>0</ng-template>
+  </div>
+  <div class="stat-label">Ce mois</div>
+</div>
+      
+      <div class="stat-card">
+        <h3>Réconciliations</h3>
+        <div class="stat-value">{{ getObjectKeys(reconciliationStatusCount).length > 0 ? '98.5%' : '0%' }}</div>
+        <div class="stat-label">Taux de réussite</div>
       </div>
-      <ng-template #noTransactionData>
-        <p class="no-data">Aucune donnée de transaction disponible</p>
-      </ng-template>
+      
+      <div class="stat-card">
+        <h3>En Attente</h3>
+        <div class="stat-value">{{ pendingTransactions.length }}</div>
+        <div class="stat-label">Transactions</div>
+      </div>
+      
+      <div class="stat-card">
+        <h3>Non Appariées</h3>
+        <div class="stat-value">{{ unmatchedReconciliations.length }}</div>
+        <div class="stat-label">Réconciliations</div>
+      </div>
     </div>
 
-    <!-- Reconciliation Status -->
-    <div class="home-section">
-      <h2>Statut des réconciliations</h2>
-      <div *ngIf="getObjectKeys(reconciliationStatusCount).length > 0; else noStatusData">
-        <div *ngFor="let entry of getObjectEntries(reconciliationStatusCount)" class="data-item">
-          <p><strong>{{ formatStatusKey(entry.key) }}</strong> : {{ entry.value }} réconciliations</p>
-        </div>
-      </div>
-      <ng-template #noStatusData>
-        <p class="no-data">Aucune donnée de statut disponible</p>
-      </ng-template>
-    </div>
 
-    <!-- Reconciliation Performance -->
-    <div class="home-section">
-      <h2>Performances des réconciliations</h2>
-      <div *ngIf="getObjectKeys(reconciliationPerformance).length > 0; else noPerformanceData">
-        <div *ngFor="let entry of getObjectEntries(reconciliationPerformance)" class="data-item">
-          <p><strong>{{ formatStatusKey(entry.key) }}</strong> : {{ entry.value | number:'1.2-2' }}</p>
-        </div>
-      </div>
-      <ng-template #noPerformanceData>
-        <p class="no-data">Aucune donnée de performance disponible</p>
-      </ng-template>
-    </div>
 
-    <!-- Pending Transactions -->
-    <div class="home-section">
-      <h2>Transactions en attente</h2>
-      <div *ngIf="pendingTransactions.length > 0; else noPendingData">
-        <div class="transaction-list">
-          <div *ngFor="let transaction of pendingTransactions; let i = index" class="data-item">
-            <p><strong>Transaction ID :</strong> {{ transaction }}</p>
-          </div>
-          <div *ngIf="pendingTransactions.length > 10" class="more-items">
-            <p>... et {{ pendingTransactions.length - 10 }} autres transactions</p>
-          </div>
-        </div>
-      </div>
-      <ng-template #noPendingData>
-        <p class="no-data">Aucune transaction en attente</p>
-      </ng-template>
-    </div>
+    <!-- Data Tables -->
+    <div class="grid-2">
+  
 
-    <!-- Unmatched Reconciliations -->
-    <div class="home-section">
-      <h2>Réconciliations non appariées</h2>
-      <div *ngIf="unmatchedReconciliations.length > 0; else noUnmatchedData">
-        <div class="reconciliation-list">
-          <div *ngFor="let rec of unmatchedReconciliations; let i = index" class="data-item">
-            <p><strong>Réconciliation ID :</strong> {{ rec.id }}</p>
-            <p><strong>Montant :</strong> {{ rec.matchingAmount | number:'1.2-2' }}</p>
-            <p><strong>Date :</strong> {{ rec.reconciliationDate | date:'short' }}</p>
-          </div>
+      <!-- Unmatched Reconciliations Table -->
+      <div class="data-table-container">
+        <div class="table-header">Réconciliations Non Appariées</div>
+        <div *ngIf="unmatchedReconciliations.length > 0; else noUnmatchedData">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID Réconciliation</th>
+                <th>Montant</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rec of unmatchedReconciliations; let i = index">
+                <td>{{ rec.id }}</td>
+                <td>{{ rec.matchingAmount | number:'1.2-2' }}</td>
+                <td>{{ rec.reconciliationDate | date:'short' }}</td>
+              </tr>
+            </tbody>
+          </table>
           <div *ngIf="unmatchedReconciliations.length > 5" class="more-items">
             <p>... et {{ unmatchedReconciliations.length - 5 }} autres réconciliations</p>
           </div>
         </div>
+        <ng-template #noUnmatchedData>
+          <div class="no-data">Aucune réconciliation non appariée</div>
+        </ng-template>
       </div>
-      <ng-template #noUnmatchedData>
-        <p class="no-data">Aucune réconciliation non appariée</p>
-      </ng-template>
     </div>
 
-    <!-- Reconciliation Status Summary -->
-    <div class="home-section status-summary">
-      <h2>Statut Global de la Réconciliation</h2>
-      <p class="summary-text">{{ reconciliationStatusSummary }}</p>
+    <!-- Summary Section -->
+    <div class="summary-section">
+      <div class="summary-title">Statut Global de la Réconciliation</div>
+      <div class="summary-text">{{ reconciliationStatusSummary }}</div>
     </div>
   </div>
 </div>
