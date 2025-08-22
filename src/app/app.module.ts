@@ -50,6 +50,7 @@ import { ProcessDetailComponent } from './components/process-detail/process-deta
 import { ExecutionListComponent } from './components/execution-list/execution-list.component';
 import { ReconciliationListComponent } from './components/reconciliation-list/reconciliation-list.component';
 import { ReconciliationManualComponent } from './components/reconciliation-manual/reconciliation-manual.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 
 
@@ -87,7 +88,8 @@ import { ReconciliationManualComponent } from './components/reconciliation-manua
     ProcessDetailComponent,
     ExecutionListComponent,
     ReconciliationListComponent,
-    ReconciliationManualComponent
+    ReconciliationManualComponent,
+    ChatComponent
             ],
   imports: [
     BrowserModule,
