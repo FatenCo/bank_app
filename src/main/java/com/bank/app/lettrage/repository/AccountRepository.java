@@ -22,4 +22,13 @@ public interface AccountRepository extends JpaRepository<AccountEntry, UUID> {
         AND a.total <> 0
     """)
     List<AccountEntry> findUnmatchedAccounts();
+
+    @Query("SELECT COUNT(a) FROM AccountEntry a WHERE a.id NOT IN " +
+            "(SELECT DISTINCT r.accountEntry.id FROM Reconciliation r WHERE r.matched = true)")
+    long countUnmatchedAccounts();
+
+    // Add a missing method signature for the query below
+    @Query("SELECT a FROM AccountEntry a WHERE a.id NOT IN " +
+            "(SELECT DISTINCT r.accountEntry.id FROM Reconciliation r WHERE r.matched = true)")
+    List<AccountEntry> findUnmatchedAccountsWithDistinct();
 }

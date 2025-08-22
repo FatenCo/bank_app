@@ -57,6 +57,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/processes/**").permitAll()
                         .requestMatchers("/api/reconciliations/**").permitAll()
                         .requestMatchers("/api/dashboard/**").permitAll()
+                        .requestMatchers("/api/chatbot/**").permitAll()
 
 
                         // allow pre-flight

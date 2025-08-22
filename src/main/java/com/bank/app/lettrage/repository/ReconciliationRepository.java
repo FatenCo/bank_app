@@ -17,9 +17,9 @@ public interface ReconciliationRepository extends JpaRepository<Reconciliation, 
     List<Reconciliation> findByMatched(boolean matched);
 
     @Query("""
-        SELECT r FROM Reconciliation r
-        WHERE r.matched = false
-    """)
+                SELECT r FROM Reconciliation r
+                WHERE r.matched = false
+            """)
     List<Reconciliation> findUnmatchedReconciliations();
 
     @Query("SELECT COUNT(r) FROM Reconciliation r WHERE r.autoMatched = true")
@@ -27,4 +27,14 @@ public interface ReconciliationRepository extends JpaRepository<Reconciliation, 
 
     @Query("SELECT COUNT(r) FROM Reconciliation r WHERE r.manualMatched = true")
     long countByManualMatchedTrue();
+
+    long countByAutoMatched(boolean autoMatched);
+
+    long countByManualMatched(boolean manualMatched);
+
+    boolean existsByAccountEntryAndMatched(AccountEntry accountEntry, boolean matched);
+
+    // Adding the missing method signature for the query below
+    @Query("SELECT r FROM Reconciliation r WHERE r.matched = false OR r.unmatched = true")
+    List<Reconciliation> findUnmatchedOrUnreconciled();
 }

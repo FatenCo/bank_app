@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface StatementEntryRepository extends JpaRepository<StatementEntry, UUID> {
+
     List<StatementEntry> findByAccountNumberIn(List<String> accountNumbers);
 
     @Query("""
@@ -17,4 +18,13 @@ public interface StatementEntryRepository extends JpaRepository<StatementEntry, 
         )
     """)
     List<StatementEntry> findUnmatchedStatements();
+
+    @Query("SELECT COUNT(s) FROM StatementEntry s WHERE s.id NOT IN " +
+            "(SELECT DISTINCT r.statementEntry.id FROM Reconciliation r WHERE r.matched = true)")
+    long countUnmatchedStatements();
+
+    // Adding the missing method signature for the query below
+    @Query("SELECT s FROM StatementEntry s WHERE s.id NOT IN " +
+            "(SELECT DISTINCT r.statementEntry.id FROM Reconciliation r WHERE r.matched = true)")
+    List<StatementEntry> findUnmatchedStatementsWithDistinct();  // The missing method
 }

@@ -44,4 +44,7 @@ public interface ImportJobRepository extends JpaRepository<ImportJob, UUID> {
     Optional<ImportJob> findTopBySourceOrderByStartedAtDesc(String source);
     @Query("SELECT COUNT(ij) FROM ImportJob ij WHERE ij.status = :status")
     long countByStatus(@Param("status") String status);
+    List<ImportJob> findTop5ByOrderByStartedAtDesc();
+
+    List<ImportJob> findByStatus(String status);
 }
