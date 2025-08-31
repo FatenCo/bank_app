@@ -1,35 +1,38 @@
 package com.bank.app.lettrage.entity;
 
-import java.util.List;
-import java.util.Map;
+
+import java.time.LocalDateTime;
 
 public class ChatResponse {
     private String response;
+    private String intent;
+    private Double confidence;
+    private LocalDateTime timestamp;
     private boolean success;
-    private String sessionId;
-    private List<SuggestedAction> suggestedActions;
-    private Map<String, Object> contextData;
 
-    // Constructeurs, getters et setters
     public ChatResponse() {}
 
-    public ChatResponse(String response, boolean success) {
+    public ChatResponse(String response, String intent, Double confidence) {
         this.response = response;
-        this.success = success;
+        this.intent = intent;
+        this.confidence = confidence;
+        this.timestamp = LocalDateTime.now();
+        this.success = true;
     }
 
+    // Getters et Setters
     public String getResponse() { return response; }
     public void setResponse(String response) { this.response = response; }
 
+    public String getIntent() { return intent; }
+    public void setIntent(String intent) { this.intent = intent; }
+
+    public Double getConfidence() { return confidence; }
+    public void setConfidence(Double confidence) { this.confidence = confidence; }
+
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+
     public boolean isSuccess() { return success; }
     public void setSuccess(boolean success) { this.success = success; }
-
-    public String getSessionId() { return sessionId; }
-    public void setSessionId(String sessionId) { this.sessionId = sessionId; }
-
-    public List<SuggestedAction> getSuggestedActions() { return suggestedActions; }
-    public void setSuggestedActions(List<SuggestedAction> suggestedActions) { this.suggestedActions = suggestedActions; }
-
-    public Map<String, Object> getContextData() { return contextData; }
-    public void setContextData(Map<String, Object> contextData) { this.contextData = contextData; }
 }
