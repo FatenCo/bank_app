@@ -1,147 +1,74 @@
-<!-- chat.component.html -->
+
 <div class="chat-container">
-  <!-- En-tête du chat -->
+  <!-- Header -->
   <div class="chat-header">
-    <div class="header-left">
-      <div class="bot-avatar">🤖</div>
-      <div class="header-info">
-        <h3>Assistant Lettrage Bancaire</h3>
-        <div class="connection-status" [ngClass]="{'connected': isConnected, 'disconnected': !isConnected}">
-          <span class="status-dot"></span>
-          {{ isConnected ? 'Connecté' : 'Déconnecté' }}
+    <h2>🏦 Assistant Réconciliation Bancaire</h2>
+    <div class="connection-status">
+      <span [ngClass]="{'connected': isConnected, 'disconnected': !isConnected}">
+        {{ isConnected ? '🟢 Connecté' : '🔴 Déconnecté' }}
+      </span>
+      <button (click)="testConnection()" class="btn-test">🧪 Test</button>
+    </div>
+  </div>
+  
+  <!-- Messages -->
+  <div class="chat-messages" #messagesContainer>
+    <div *ngFor="let msg of messages" 
+         [ngClass]="{'user-message': msg.isUser, 'bot-message': !msg.isUser}"
+         class="message">
+      
+      <div class="message-content">
+        <div class="message-text" [innerHTML]="formatMessage(msg.message)"></div>
+        <div class="message-info">
+          <span class="timestamp">{{ msg.timestamp | date:'HH:mm' }}</span>
+          <span *ngIf="msg.intent && !msg.isUser" class="intent-info">
+            {{ msg.intent }} ({{ (msg.confidence! * 100) | number:'1.0-1' }}%)
+          </span>
         </div>
       </div>
     </div>
     
-    <div class="header-actions">
-      <button class="btn-icon" (click)="resetConversation()" title="Nouvelle conversation">
-        🔄
-      </button>
-      <button class="btn-icon" (click)="checkServiceHealth()" title="Vérifier la connexion">
-        📊
-      </button>
-    </div>
-  </div>
-
-  <!-- Contexte actuel -->
-  <div class="context-bar" *ngIf="contextData.currentPage || contextData.accountNumber">
-    <div class="context-item" *ngIf="contextData.currentPage">
-      <span class="context-label">Page:</span>
-      <span class="context-value">{{ contextData.currentPage }}</span>
-    </div>
-    <div class="context-item" *ngIf="contextData.accountNumber">
-      <span class="context-label">Compte:</span>
-      <span class="context-value">{{ contextData.accountNumber }}</span>
-      <span class="context-balance" *ngIf="contextData.accountBalance">
-        ({{ contextData.accountBalance | currency:'TND':'symbol':'1.2-2' }})
-      </span>
-    </div>
-    <div class="context-item" *ngIf="contextData.reconciliationStatus">
-      <span class="context-label">Statut:</span>
-      <span class="context-value status" [ngClass]="contextData.reconciliationStatus.toLowerCase()">
-        {{ contextData.reconciliationStatus }}
-      </span>
-    </div>
-  </div>
-
-  <!-- Zone des messages -->
-  <div class="messages-container" #messagesContainer>
-    <!-- Suggestions rapides (uniquement si pas de messages utilisateur) -->
-    <div class="quick-suggestions" *ngIf="messages.length <= 1">
-      <h4>Suggestions rapides:</h4>
-      <div class="suggestions-grid">
-        <button 
-          class="suggestion-btn" 
-          *ngFor="let suggestion of quickSuggestions"
-          (click)="useSuggestion(suggestion)"
-          [disabled]="isLoading">
-          {{ suggestion }}
-        </button>
-      </div>
-    </div>
-
-    <!-- Messages -->
-    <div class="messages-list">
-      <div 
-        class="message-wrapper" 
-        *ngFor="let message of messages; trackBy: trackByMessageId"
-        [ngClass]="{'user-message': message.isUser, 'bot-message': !message.isUser}">
-        
-        <div class="message-bubble" [ngClass]="{
-          'user': message.isUser, 
-          'bot': !message.isUser,
-          'loading': message.isLoading,
-          'error': message.isError
-        }">
-          <!-- Avatar -->
-          <div class="message-avatar" *ngIf="!message.isUser">
-            <span *ngIf="!message.isLoading && !message.isError">🤖</span>
-            <span *ngIf="message.isLoading">⏳</span>
-            <span *ngIf="message.isError">❌</span>
-          </div>
-
-          <!-- Contenu du message -->
-          <div class="message-content">
-            <div class="message-text" [innerHTML]="formatMessageContent(message.content)"></div>
-            
-            <!-- Actions suggérées -->
-            <div class="suggested-actions" *ngIf="message.suggestedActions && message.suggestedActions.length > 0">
-              <h5>Actions suggérées:</h5>
-              <div class="actions-grid">
-                <button 
-                  class="action-btn"
-                  *ngFor="let action of message.suggestedActions"
-                  (click)="executeSuggestedAction(action)"
-                  [disabled]="isLoading">
-                  <span class="action-icon">{{ getActionIcon(action.type) }}</span>
-                  <span class="action-label">{{ action.label }}</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Timestamp -->
-            <div class="message-time">
-              {{ formatTime(message.timestamp) }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Zone de saisie -->
-  <div class="input-container">
     <!-- Indicateur de frappe -->
-    <div class="typing-indicator" *ngIf="isLoading">
-      L'assistant réfléchit
-      <span class="dots">
-        <span>.</span><span>.</span><span>.</span>
-      </span>
+    <div *ngIf="isLoading" class="bot-message">
+      <div class="message-content">
+        <div class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="typing-text">Assistant analyse votre demande...</div>
+      </div>
     </div>
-
-    <!-- Barre de saisie -->
-    <div class="input-bar">
-      <textarea
-        #messageInput
-        class="message-input"
+  </div>
+  
+  <!-- Suggestions rapides -->
+  <div class="quick-suggestions" *ngIf="!isLoading">
+    <div class="suggestions-label">💡 Suggestions rapides :</div>
+    <div class="suggestions-buttons">
+      <button *ngFor="let suggestion of quickSuggestions" 
+              (click)="sendQuickMessage(suggestion)"
+              class="suggestion-btn">
+        {{ suggestion }}
+      </button>
+    </div>
+  </div>
+  
+  <!-- Zone de saisie -->
+  <div class="chat-input">
+    <div class="input-group">
+      <textarea 
         [(ngModel)]="currentMessage"
         (keypress)="onKeyPress($event)"
-        placeholder="Tapez votre question sur le lettrage bancaire..."
-        [disabled]="isLoading || !isConnected"
-        rows="1"></textarea>
-      
+        placeholder="Tapez votre question sur la réconciliation bancaire..."
+        rows="2"
+        class="form-control"
+        [disabled]="isLoading || !isConnected">
+      </textarea>
       <button 
-        class="send-btn"
-        (click)="sendMessage()"
-        [disabled]="!currentMessage.trim() || isLoading || !isConnected">
+        (click)="sendMessage()" 
+        [disabled]="!currentMessage.trim() || isLoading || !isConnected"
+        class="btn btn-primary">
         <span *ngIf="!isLoading">📤</span>
-        <span *ngIf="isLoading">⏳</span>
+        <span *ngIf="isLoading" class="spinner">⏳</span>
       </button>
-    </div>
-
-    <!-- Message d'aide -->
-    <div class="help-text" *ngIf="!isConnected">
-      ⚠️ Service temporairement indisponible. Vérifiez que le serveur est démarré.
     </div>
   </div>
 </div>
